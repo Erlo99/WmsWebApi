@@ -1,5 +1,7 @@
-﻿using Application.Entities;
+﻿using Application.DTO.Users;
+using Application.Entities;
 using Application.interfaces;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +15,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
@@ -24,15 +26,20 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-
-        public IActionResult Get()
+        public IActionResult GetWithFilters(string username = null, RolesEnum? role = null)
         {
-            var users = _usersService.GetAllUsers();
+            var users = _usersService.GetAllWithFilters(null, username, role);
             return Ok(users);
         }
 
+        [HttpGet, Route("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var users = _usersService.GetAllWithFilters(id).ToList().First();
+            return Ok(users);
+        }
 
-        [HttpPost]
+        [HttpPost, Route("Authentication")]
         [AllowAnonymous]
         [SwaggerOperation(Summary = "Returns user when credentials are correct")]
         public IActionResult Authenticate(UserAuthenticate userAuthenticate)
@@ -44,6 +51,18 @@ namespace WebAPI.Controllers
             return Ok(user);
         }
 
+        [HttpPost]
+        public IActionResult PostUser(CreateUsersDto userData)
+        {
+            var user = _usersService.CreateUser(userData);
+            return Created($"api/users/?id={user.Id}", user);
+        }
 
+        [HttpPatch, Route("{id}")]
+        public IActionResult PatchUser(int id, UpdateUsersDTO userData)
+        {
+            _usersService.UpdateUser(id, userData);
+            return NoContent();
+        }
     }
 }

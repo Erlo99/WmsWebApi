@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Users;
+﻿using Domain.Entities;
+using Domain.Entities.Users;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using System;
@@ -23,10 +24,37 @@ namespace Infrastructure.Repositories
             var user = _context.Users.FirstOrDefault(x => x.UserName == username && x.Password == password);
             return user;
         }
-
-        public IEnumerable<Users> GetAll()
+        public IEnumerable<Users> GetAllWithFilters(int? id = null, string username = null, RolesEnum? role = null)
         {
-            return _context.Users;
+            var users = _context.Users.AsEnumerable();
+
+            if(id != null)
+                return users.Where(x => x.Id == id);
+            if (username != null)
+                users = users.Where(x => x.UserName == username);
+            if (role != null)
+                users = users.Where(x => x.RoleId == role);
+            return users;
+        }
+
+
+        public Users CreateUser(Users user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return user;
+        }
+
+        public void DeleteUser(Users user)
+        {
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+        }
+
+        public void UpdateUser(Users user)
+        {
+            _context.Users.Update(user);
+            _context.SaveChanges();
         }
     }
 }

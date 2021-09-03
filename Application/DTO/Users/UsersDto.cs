@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Application.DTO.Users
 {
@@ -16,7 +17,7 @@ namespace Application.DTO.Users
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
-        public int RoleId { get; set; }
+        public RolesEnum RoleId { get; set; }
 
         public void Mapping(Profile profile)
         {

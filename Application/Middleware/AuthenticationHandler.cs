@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-namespace Application.Helpers
+
+namespace Application.Middleware
 {
     public class AuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {

@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Users;
+﻿using Domain.Entities;
+using Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,14 @@ namespace Domain.Interfaces
 {
     public interface IUsersRepository
     {
-        IEnumerable<Users> GetAll();
+        IEnumerable<Users> GetAllWithFilters(int? id = null, string username = null, RolesEnum? role = null);
 
+        //void UpdateUser()
         Users Authenticate(string username, string password);
+
+        Users CreateUser(Users user);
+        void DeleteUser(Users id);
+
+        void UpdateUser(Users users);
     }
 }

@@ -20,7 +20,7 @@ namespace Domain.Entities.Users
         }
 
 
-        public Users(int id, string firstName, string lastName, string userName, string password, RolesEnum roleId)
+        public Users(int id, string firstName, string lastName, string userName, string password, RolesEnum roleId, Roles roles)
         {
             Id = id;
             FirstName = firstName;
@@ -28,6 +28,7 @@ namespace Domain.Entities.Users
             UserName = userName;
             Password = password;
             RoleId = roleId;
+            Roles = roles;
         }
 
         [Key]

@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.DTO.Users;
 using Application.Entities;
+using Application.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Application.interfaces
 {
     public interface IUsersService
     {
-        public IEnumerable<UsersDto> GetAllWithFilters(int? id = null, string username = null, RolesEnum? role = null);
+        public (IEnumerable<UsersDto>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, string username = null, RolesEnum? role = null);
 
         public UsersDto Authenticate(string username, string password);
 

@@ -10,7 +10,9 @@ namespace Domain.Interfaces
 {
     public interface IUsersRepository
     {
-        IEnumerable<Users> GetAllWithFilters(int? id = null, string username = null, RolesEnum? role = null);
+        IEnumerable<Users> GetAllWithFilters(ref Pagination pagination, string username = null, RolesEnum? role = null);
+
+        
 
         //void UpdateUser()
         Users Authenticate(string username, string password);

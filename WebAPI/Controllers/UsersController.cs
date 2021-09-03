@@ -1,5 +1,7 @@
-﻿using Application.DTO.Users;
+﻿using Application.DTO;
+using Application.DTO.Users;
 using Application.Entities;
+using Application.Helpers;
 using Application.interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -26,17 +28,18 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetWithFilters(string username = null, RolesEnum? role = null)
+        public IActionResult GetWithFilters(string username = null, RolesEnum? role = null, [FromQuery] PaginationDto pagination = null)
         {
-            var users = _usersService.GetAllWithFilters(null, username, role);
-            return Ok(users);
+            pagination = pagination ?? new PaginationDto();
+            var users = _usersService.GetAllWithFilters(ref pagination, username, role);
+            return Ok(new PagedResponse<UsersDto>(users));
         }
 
         [HttpGet, Route("{id}")]
         public IActionResult GetById(int id)
         {
-            var users = _usersService.GetAllWithFilters(id).ToList().First();
-            return Ok(users);
+            //var users = _usersService.GetAllWithFilters(id).ToList().First();
+            return Ok();//Ok(new Response<UsersDto>(users));
         }
 
         [HttpPost, Route("Authentication")]
@@ -48,14 +51,14 @@ namespace WebAPI.Controllers
 
             if (user == null)
                 return BadRequest("Incorrect username or password");
-            return Ok(user);
+            return Ok(new Response<UsersDto>(user));
         }
 
         [HttpPost]
         public IActionResult PostUser(CreateUsersDto userData)
         {
             var user = _usersService.CreateUser(userData);
-            return Created($"api/users/?id={user.Id}", user);
+            return Created($"api/users/{user.Id}", new Response<UsersDto>(user));
         }
 
         [HttpPatch, Route("{id}")]

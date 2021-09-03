@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.DTO.Users;
 using Application.Entities;
+using Application.Helpers;
 using Application.interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -34,11 +35,12 @@ namespace Application.Services
 
             return _mapper.Map<UsersDto>(user);
         }
-        public IEnumerable<UsersDto> GetAllWithFilters(int? id = null, string username = null, RolesEnum? role = null)
+        public (IEnumerable<UsersDto>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, string username = null, RolesEnum? role = null)
         {
-            var users = _usersRepository.GetAllWithFilters(id, username, role);
-
-            return _mapper.Map<IEnumerable<UsersDto>>(users);
+            Pagination pagination = _mapper.Map<Pagination>(paginationData);
+            var users = _usersRepository.GetAllWithFilters(ref pagination, username, role);
+            var paged = _mapper.Map<PagedDto>(pagination);
+            return (_mapper.Map<IEnumerable<UsersDto>>(users), paged);
         }
 
         public UsersDto CreateUser(CreateUsersDto userData)
@@ -50,15 +52,16 @@ namespace Application.Services
 
         public void DeleteUser(int id)
         {
-            var user = _usersRepository.GetAllWithFilters(id).ToList().First();
-            _usersRepository.DeleteUser(user);
+           // var user = _usersRepository.GetAllWithFilters(null,id).ToList().First();
+           // _usersRepository.DeleteUser(user);
         }
 
         public void UpdateUser(int id, UpdateUsersDTO userData)
         {
-            var existingUser = _usersRepository.GetAllWithFilters(id).ToList().First();
-            var user = _mapper.Map(userData, existingUser);
-            _usersRepository.UpdateUser(user);
+           // var existingUser = _usersRepository.GetAllWithFilters(null,id).ToList().First();
+           // var user = _mapper.Map(userData, existingUser);
+           // _usersRepository.UpdateUser(user);
         }
+
     }
 }

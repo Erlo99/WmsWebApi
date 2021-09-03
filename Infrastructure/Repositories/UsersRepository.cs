@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.DTO;
+using Application.Middleware;
+using Domain.Entities;
 using Domain.Entities.Users;
 using Domain.Interfaces;
 using Infrastructure.Data;
@@ -24,17 +26,17 @@ namespace Infrastructure.Repositories
             var user = _context.Users.FirstOrDefault(x => x.UserName == username && x.Password == password);
             return user;
         }
-        public IEnumerable<Users> GetAllWithFilters(int? id = null, string username = null, RolesEnum? role = null)
+        public IEnumerable<Users> GetAllWithFilters(ref Pagination pagination, string username = null, RolesEnum? role = null)
         {
             var users = _context.Users.AsEnumerable();
 
-            if(id != null)
-                return users.Where(x => x.Id == id);
+            
             if (username != null)
                 users = users.Where(x => x.UserName == username);
             if (role != null)
                 users = users.Where(x => x.RoleId == role);
-            return users;
+
+            return PaginationHandler.Page<Users>(users,ref pagination);
         }
 
 
@@ -56,5 +58,7 @@ namespace Infrastructure.Repositories
             _context.Users.Update(user);
             _context.SaveChanges();
         }
+
+        
     }
 }

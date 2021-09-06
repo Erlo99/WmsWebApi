@@ -26,6 +26,13 @@ namespace Infrastructure.Repositories
             var user = _context.Users.FirstOrDefault(x => x.UserName == username && x.Password == password);
             return user;
         }
+
+
+        public Users GetById(int id)
+        {
+            return _context.Users.FirstOrDefault(x => x.Id == id);
+        }
+
         public IEnumerable<Users> GetAllWithFilters(ref Pagination pagination, string username = null, RolesEnum? role = null)
         {
             var users = _context.Users.AsEnumerable();
@@ -59,6 +66,5 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        
     }
 }

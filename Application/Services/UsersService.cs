@@ -35,10 +35,20 @@ namespace Application.Services
 
             return _mapper.Map<UsersDto>(user);
         }
+
+
+        public UsersDto GetById(int id)
+        {
+            var user =_usersRepository.GetById(id);
+            return _mapper.Map<UsersDto>(user);
+        }
+
         public (IEnumerable<UsersDto>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, string username = null, RolesEnum? role = null)
         {
             Pagination pagination = _mapper.Map<Pagination>(paginationData);
+
             var users = _usersRepository.GetAllWithFilters(ref pagination, username, role);
+
             var paged = _mapper.Map<PagedDto>(pagination);
             return (_mapper.Map<IEnumerable<UsersDto>>(users), paged);
         }
@@ -52,15 +62,15 @@ namespace Application.Services
 
         public void DeleteUser(int id)
         {
-           // var user = _usersRepository.GetAllWithFilters(null,id).ToList().First();
-           // _usersRepository.DeleteUser(user);
+            var user = _usersRepository.GetById(id);
+            _usersRepository.DeleteUser(user);
         }
 
         public void UpdateUser(int id, UpdateUsersDTO userData)
         {
-           // var existingUser = _usersRepository.GetAllWithFilters(null,id).ToList().First();
-           // var user = _mapper.Map(userData, existingUser);
-           // _usersRepository.UpdateUser(user);
+            var existingUser = _usersRepository.GetById(id);
+            var user = _mapper.Map(userData, existingUser);
+            _usersRepository.UpdateUser(user);
         }
 
     }

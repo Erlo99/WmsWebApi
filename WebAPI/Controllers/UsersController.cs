@@ -38,8 +38,7 @@ namespace WebAPI.Controllers
         [HttpGet, Route("{id}")]
         public IActionResult GetById(int id)
         {
-            //var users = _usersService.GetAllWithFilters(id).ToList().First();
-            return Ok();//Ok(new Response<UsersDto>(users));
+            return Ok(_usersService.GetById(id));
         }
 
         [HttpPost, Route("Authentication")]

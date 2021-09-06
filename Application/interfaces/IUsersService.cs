@@ -15,6 +15,8 @@ namespace Application.interfaces
     {
         public (IEnumerable<UsersDto>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, string username = null, RolesEnum? role = null);
 
+        public UsersDto GetById(int id);
+
         public UsersDto Authenticate(string username, string password);
 
         public void UpdateUser(int id, UpdateUsersDTO user);

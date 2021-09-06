@@ -12,7 +12,7 @@ namespace Domain.Interfaces
     {
         IEnumerable<Users> GetAllWithFilters(ref Pagination pagination, string username = null, RolesEnum? role = null);
 
-        
+        Users GetById(int id);
 
         //void UpdateUser()
         Users Authenticate(string username, string password);

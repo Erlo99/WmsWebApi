@@ -13,21 +13,19 @@ namespace Application.Middleware
 
         public static IEnumerable<TSource> Page<TSource>(this IEnumerable<TSource> source, ref Pagination pagination)
         {
-            IEnumerable<TSource> records = null;
-
             pagination.TotalPages = (int)Math.Ceiling((source.Count() / (decimal)pagination.PageSize));
-            if (pagination.OrderBy == null)
-                records = source.Skip((pagination.PageNumber - 1) * pagination.PageSize).Take(pagination.PageSize);
-            else
+            if (pagination.OrderBy != null)
             {
                 var propertyInfo = typeof(TSource).GetProperty(pagination.OrderBy);
 
                 if (pagination.OrderDescending == true)
-                    records = source.OrderByDescending(x => propertyInfo.GetValue(x, null));
+                    source = source.OrderByDescending(x => propertyInfo.GetValue(x, null));
                 else
-                    records = source.OrderBy(x => propertyInfo.GetValue(x, null));
+                    source = source.OrderBy(x => propertyInfo.GetValue(x, null));
             }
-            return records;
+            source = source.Skip((pagination.PageNumber - 1) * pagination.PageSize).Take(pagination.PageSize);
+
+            return source;
             
         }
     }

@@ -63,8 +63,8 @@ namespace WebAPI.Controllers
             return Created($"api/users/{user.Id}", new Response<UsersDto>(user));
         }
 
-        [HttpPatch, Route("{id}")]
-        public IActionResult PatchUser(int id, UpdateUsersDTO userData)
+        [HttpPut, Route("{id}")]
+        public IActionResult PutUser(int id, UpdateUsersDTO userData)
         {
             _usersService.UpdateUser(id, userData);
             return NoContent();

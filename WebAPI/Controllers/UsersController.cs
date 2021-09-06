@@ -21,7 +21,6 @@ namespace WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
-
         public UsersController(IUsersService usersService)
         {
             _usersService = usersService;
@@ -38,7 +37,11 @@ namespace WebAPI.Controllers
         [HttpGet, Route("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok(_usersService.GetById(id));
+            var user = _usersService.GetById(id);
+            if (user == null)
+                BadRequest(ResponseMessage.BadRequestForId);
+            throw new Exception("123");
+            return Ok();
         }
 
         [HttpPost, Route("Authentication")]

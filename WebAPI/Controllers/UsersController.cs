@@ -69,5 +69,12 @@ namespace WebAPI.Controllers
             _usersService.UpdateUser(id, userData);
             return NoContent();
         }
+
+        [HttpDelete, Route("{id}")]
+        public IActionResult Deleteuser(int id)
+        {
+            _usersService.DeleteUser(id);
+            return NoContent();
+        }
     }
 }

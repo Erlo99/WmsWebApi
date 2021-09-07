@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
             var store = _storesService.GetById(id);
             if (store == null)
                 return BadRequest(ResponseMessage.BadRequestForId);
-            return Ok(store);
+            return Ok(new Response<StoresDTO>(store));
         }
         [HttpGet]
         public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null, bool? isActive = null, bool? isDefault = null)
@@ -39,7 +39,8 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult PostStore(StoreCreateDto store)
         {
-            return Ok(_storesService.Create(store));
+            var createdStore = _storesService.Create(store);
+            return Created($"api/stores/{createdStore.Id}", new Response<StoresDTO>(createdStore));
         }
         [HttpPut]
         public IActionResult PutStore(int id, StoreCreateDto store)

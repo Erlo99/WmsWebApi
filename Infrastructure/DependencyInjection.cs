@@ -16,6 +16,7 @@ namespace Infrastructure
 
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IStoresRepository, StoresRepository>();
+            services.AddScoped<IUserStoresRepository, UserStoresRepository>();
             return services;
         }
     }

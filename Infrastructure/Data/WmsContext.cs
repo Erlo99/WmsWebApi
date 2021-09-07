@@ -1,6 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Entities;
 using Domain.Entities.Users;
+using Domain.Entities.Views;
 using Infrastructure.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,13 +18,19 @@ namespace Infrastructure.Data
     {
         public WmsContext( DbContextOptions options) : base(options)
         {
-
+           
         }
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Stores> Stores { get; set; }
+        public DbSet<UserStores> UserStores { get; set; }
 
+        #region Views
+        public DbSet<UserStoresView> userStoresViews { get; set; }
+
+
+        #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // get ApplyConfiguration method with reflection

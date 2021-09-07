@@ -20,6 +20,7 @@ namespace Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IStoresService, StoresService>();
+            services.AddScoped<IUserStoresSevice, UserStoresService>();
 
             return services;
         }

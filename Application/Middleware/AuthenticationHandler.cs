@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.DTO.Users;
 using Application.interfaces;
@@ -33,7 +34,7 @@ namespace Application.Middleware
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            UsersDto user = null;
+            UsersDto user;
             try
             {
                 var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
@@ -54,7 +55,6 @@ namespace Application.Middleware
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
-
             return AuthenticateResult.Success(ticket);
         }
     }

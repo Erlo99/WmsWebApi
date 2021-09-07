@@ -3,28 +3,36 @@ using Domain.Entities;
 using Domain.Entities.Users;
 using Domain.Entities.Views;
 using Infrastructure.Data.Configurations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace Infrastructure.Data
 {
     public class WmsContext : DbContext
     {
-        public WmsContext( DbContextOptions options) : base(options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public WmsContext( DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
-           
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Stores> Stores { get; set; }
         public DbSet<UserStores> UserStores { get; set; }
+        public DbSet<Operations> Operations { get; set; }
+
+        public DbSet<UserOperations> UserOperations { get; set; }
 
         #region Views
         public DbSet<UserStoresView> userStoresViews { get; set; }
@@ -60,14 +68,19 @@ namespace Infrastructure.Data
             var entries = ChangeTracker
                 .Entries()
                 .Where(e => e.Entity is AuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
-           
+
+            
+            var userName = _httpContextAccessor.HttpContext.User.Identity.Name;
+
             foreach (var entityEntry in entries)
             {
                 ((AuditableEntity)entityEntry.Entity).LastModifiedAt = DateTime.UtcNow;
+                ((AuditableEntity)entityEntry.Entity).LastModifiedBy = userName;
 
                 if (entityEntry.State == EntityState.Added)
                 {
                     ((AuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                    ((AuditableEntity)entityEntry.Entity).CreatedBy = userName;
                 }
             }
 

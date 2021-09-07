@@ -21,7 +21,6 @@ namespace Application.Services
 
         private readonly IUsersRepository _usersRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
 
         public UsersService(IUsersRepository usersRepository, IMapper mapper)
         {

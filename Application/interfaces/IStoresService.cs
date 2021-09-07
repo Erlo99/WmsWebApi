@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Application.interfaces
 {
-    public interface IStoresService
+    public interface ICargosService
     {
-        public (IEnumerable<StoresDTO>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, bool? isActive = null, bool? isDefault = null);
-        public StoresDTO GetById(int id);
-        public void Update(int id, StoreCreateDto store);
-        public StoresDTO Create(StoreCreateDto store);
-        public void Delete(int id);
+        public (IEnumerable<CargosDto>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, int? barcode = null, string Sku = null, string name = null);
+        public void Update(CargosDto store);
+        public CargosDto Create(CargosDto store);
+        public void Delete(int barcode);
     }
 }

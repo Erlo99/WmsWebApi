@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IStoresRepository
+    public interface ICargosRepository
     {
-        Stores GetById(int id);
-        IEnumerable<Stores> GetWithFilters(ref Pagination pagination, bool? isActive = null, bool? isDefault = null);
-        void Update(Stores store);
-        Stores Create(Stores store);
-        void Delete(int id);
+        IEnumerable<Cargos> GetWithFilters(ref Pagination pagination, int? barcode = null, string Sku = null, string name = null);
+        void Update(Cargos store);
+        Cargos Create(Cargos store);
+        void Delete(int barcode);
     }
 }

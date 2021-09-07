@@ -31,8 +31,9 @@ namespace Infrastructure.Data
         public DbSet<Stores> Stores { get; set; }
         public DbSet<UserStores> UserStores { get; set; }
         public DbSet<Operations> Operations { get; set; }
-
         public DbSet<UserOperations> UserOperations { get; set; }
+        public DbSet<Cargos> Cargos { get; set; }
+        public DbSet<LocationSize> LocationSizes { get; set; }
 
         #region Views
         public DbSet<UserStoresView> userStoresViews { get; set; }

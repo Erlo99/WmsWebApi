@@ -16,9 +16,10 @@ namespace Application.Services
         private readonly ICargosRepository _cargosRepository;
         private readonly IMapper _mapper;
 
-        public CargosService(ICargosRepository cargosRepository)
+        public CargosService(ICargosRepository cargosRepository, IMapper mapper)
         {
             _cargosRepository = cargosRepository;
+            _mapper = mapper;
         }
 
         public CargosDto Create(CargosDto cargoData)
@@ -44,10 +45,9 @@ namespace Application.Services
 
         public void Update(CargosDto cargoData)
         {
-            var cargo = _mapper.Map<Cargos>(cargoData);
+            var cargoToUpdate = _cargosRepository.GetByBarcode(cargoData.Barcode);
+            var cargo = _mapper.Map(cargoData, cargoToUpdate);
             _cargosRepository.Update(cargo);
-
-
         }
     }
 }

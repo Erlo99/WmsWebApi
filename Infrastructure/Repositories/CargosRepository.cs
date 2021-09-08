@@ -29,6 +29,10 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public Cargos GetByBarcode(int barcode)
+        {
+           return  _context.Cargos.SingleOrDefault(x => x.Barcode == barcode);
+        }
 
         public IEnumerable<Cargos> GetWithFilters(ref Pagination pagination, int? barcode = null, string sku = null, string name = null)
         {

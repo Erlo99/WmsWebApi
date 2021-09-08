@@ -40,8 +40,7 @@ namespace WebAPI.Controllers
             var user = _usersService.GetById(id);
             if (user == null)
                 BadRequest(ResponseMessage.BadRequestForId);
-            throw new Exception("123");
-            return Ok();
+            return Ok(user);
         }
 
         [HttpPost, Route("Authentication")]

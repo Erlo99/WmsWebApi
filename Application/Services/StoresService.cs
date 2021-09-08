@@ -43,7 +43,8 @@ namespace Application.Services
         public void Update(int id, StoreCreateDto storeData)
         {
             var store = _storesRepository.GetById(id);
-            _storesRepository.Update(store);
+            var storeUpdated = _mapper.Map(storeData, store);
+            _storesRepository.Update(storeUpdated);
         }
 
         public StoresDTO Create(StoreCreateDto storeData)

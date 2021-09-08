@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,8 +10,23 @@ using System.Threading.Tasks;
 namespace Domain.Entities
 {
     [Table("Locations")]
-    public class Locations
+    public class Locations : AuditableEntity
     {
+        public Locations()
+        {
+
+        }
+        public Locations(int id, int storeId, string column, int row, int sizeId, Stores stores, LocationSize locationSize)
+        {
+            Id = id;
+            StoreId = storeId;
+            Column = column;
+            Row = row;
+            SizeId = sizeId;
+            Stores = stores;
+            LocationSize = locationSize;
+        }
+
         [Key]
         public int Id { get; set; }
         [Required]

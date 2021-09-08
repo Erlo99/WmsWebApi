@@ -34,11 +34,12 @@ namespace Infrastructure.Data
         public DbSet<UserOperations> UserOperations { get; set; }
         public DbSet<Cargos> Cargos { get; set; }
         public DbSet<LocationSize> LocationSizes { get; set; }
-
         public DbSet<Locations> Locations { get; set; }
+        public DbSet<LocationCargos> LocationCargos { get; set; }
 
         #region Views
         public DbSet<UserStoresView> userStoresViews { get; set; }
+        public DbSet<UserOperationsView> UserOperationsView { get; set; }
 
 
         #endregion

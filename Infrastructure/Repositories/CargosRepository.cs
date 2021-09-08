@@ -14,6 +14,10 @@ namespace Infrastructure.Repositories
     {
         private readonly WmsContext _context;
 
+        public CargosRepository(WmsContext context)
+        {
+            _context = context;
+        }
 
         public Cargos Create(Cargos cargo)
         {

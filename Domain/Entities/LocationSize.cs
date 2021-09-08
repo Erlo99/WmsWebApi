@@ -12,6 +12,22 @@ namespace Domain.Entities
     [Table("LocationSize")]
     public class LocationSize : AuditableEntity
     {
+
+        public LocationSize()
+        {
+
+        }
+        public LocationSize(int id, string sizeName, string category, int width, int height, int length, int qty)
+        {
+            Id = id;
+            SizeName = sizeName;
+            Category = category;
+            Width = width;
+            Height = height;
+            Length = length;
+            Qty = qty;
+        }
+
         [Key]
         public int Id { get; set; }
         [MaxLength(50)]

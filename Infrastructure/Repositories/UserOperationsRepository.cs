@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Middleware;
+using Domain.Entities;
+using Domain.Entities.Views;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using System;
@@ -19,9 +21,24 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public UserOperations GetAllWithFilters(ref Pagination pagination, string userId = null, string LocationId = null, DateTime? operationDate = null, string storeId = null)
+        public IEnumerable<UserOperations> GetAllWithFilters(ref Pagination pagination, string userName = null, string locationName = null, DateTime? operationDate = null, string storeName = null, string operationName = null)
         {
-            return new UserOperations();
+            var usersOperations = _context.UserOperations.AsEnumerable();
+
+
+            if (userName != null)
+                usersOperations.Where(x => x.UserName == userName);
+            if (locationName != null)
+                usersOperations.Where(x => x.LocationName == locationName);
+            if (operationDate != null)
+                usersOperations.Where(x => x.OperationDate == operationDate);
+            if (storeName != null)
+                usersOperations.Where(x => x.StoreName == storeName);
+            if (operationName != null)
+                usersOperations.Where(x => x.OperationName == operationName);
+
+            return PaginationHandler.Page<UserOperations>(usersOperations, ref pagination);
         }
+
     }
 }

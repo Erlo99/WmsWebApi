@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
             _locationSizesService.Create(locationSize);
             return NoContent();
         }
-        [HttpPost]
+        [HttpPut]
         public IActionResult Update(LocationSizeDto locationSize)
         {
             _locationSizesService.Update(locationSize);

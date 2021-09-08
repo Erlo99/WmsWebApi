@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Domain.Interfaces
 {
     public interface IUserOperationsRepository
     {
-        UserOperations GetAllWithFilters(ref Pagination pagination, string userId = null, string LocationId = null, DateTime? operationDate = null, string storeId = null);
+        IEnumerable<UserOperations> GetAllWithFilters(ref Pagination pagination, string userName = null, string LocationName = null, DateTime? operationDate = null, string storeName = null, string operationName = null);
+
     }
 }

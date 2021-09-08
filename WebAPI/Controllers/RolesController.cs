@@ -12,18 +12,18 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OperationsController : ControllerBase
+    public class RolesController : ControllerBase
     {
 
         [HttpGet]
         public IActionResult GetAll()
         {
             var dict = new Dictionary<int, string>();
-            foreach (var name in Enum.GetNames(typeof(OperationsEnum)))
+            foreach (var name in Enum.GetNames(typeof(RolesEnum)))
             {
-                dict.Add((int)Enum.Parse(typeof(OperationsEnum), name), name);
+                dict.Add((int)Enum.Parse(typeof(RolesEnum), name), name);
             }
-            return (Ok(new Response<Dictionary<int,string>>(dict)));
+            return (Ok(new Response<Dictionary<int, string>>(dict)));
         }
-}
+    }
 }

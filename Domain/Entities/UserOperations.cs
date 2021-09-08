@@ -16,16 +16,25 @@ namespace Domain.Entities
 
         }
 
+        public UserOperations(int id, string userName, string operationName, string locationName, string details, DateTime operationDate)
+        {
+            Id = id;
+            UserName = userName;
+            OperationName = operationName;
+            LocationName = locationName;
+            Details = details;
+            OperationDate = operationDate;
+        }
+
         [Key]
         public int Id { get; set; }
-        public int UserId { get; set; }
-        [ForeignKey("Operations")]
-        public int OperationId { get; set; }
-        public int LocationId { get; set; }
+        public string UserName { get; set; }
+        public string  OperationName { get; set; }
+        public string LocationName { get; set; }
+        public string StoreName { get; set; }
         [MaxLength(500)]
         public string Details { get; set; }
         public DateTime OperationDate { get; set; }
 
-        public virtual OperationsEnum Operations { get; set; }
     }
 }

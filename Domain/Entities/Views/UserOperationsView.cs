@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Views
 {
+    [Keyless]
     public class UserOperationsView
     {
         public UserOperationsView()

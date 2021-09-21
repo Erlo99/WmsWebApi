@@ -3,6 +3,7 @@ using Application.Helpers;
 using Application.interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
-   
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize("ManagmentUsers", Roles = "Accountant")]
     public class OperationsController : ControllerBase
     {
         private readonly IUserOperationsService _userOperationsService;

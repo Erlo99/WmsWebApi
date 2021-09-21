@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Application.Helpers
 {
     [Serializable]
-    internal class BadRequestException : Exception
+    public class BadRequestException : Exception
     {
         public BadRequestException()
         {

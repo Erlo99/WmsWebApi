@@ -19,17 +19,17 @@ namespace Application.Middleware
 {
     public class AuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private readonly IUsersService _userService;
+        private readonly IAuthService _authService;
 
         public AuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IUsersService userService)
+            IAuthService authService)
             : base(options, logger, encoder, clock)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -39,7 +39,7 @@ namespace Application.Middleware
             {
                 var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
                 var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(authHeader.Parameter)).Split(':');
-                user = _userService.Authenticate(credentials.FirstOrDefault(), credentials.LastOrDefault());
+                user = _authService.Authenticate(credentials.FirstOrDefault(), credentials.LastOrDefault());
                 if (user == null)
                     throw new ArgumentException("Invalid credentials");
             }

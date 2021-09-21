@@ -21,16 +21,15 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Users Authenticate(string username, string password)
-        {
-            var user = _context.Users.FirstOrDefault(x => x.UserName == username && x.Password == password);
-            return user;
-        }
 
 
         public Users GetById(int id)
         {
             return _context.Users.FirstOrDefault(x => x.Id == id);
+        }
+        public Users GetByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(x => x.UserName == username);
         }
 
         public IEnumerable<Users> GetAllWithFilters(ref Pagination pagination, string username = null, RolesEnum? role = null)

@@ -17,8 +17,13 @@ namespace WebAPI
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+            Host.CreateDefaultBuilder(args)/*.configurelogging(loggingbuilder =>
+            {
+                loggingbuilder.clearproviders();
+                loggingbuilder
+                    .adddebug()
+                    .addeventlog();
+            })*/.ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });

@@ -15,8 +15,15 @@ namespace Infrastructure
         {
 
             services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IStoresRepository, StoresRepository>();
             services.AddScoped<IUserStoresRepository, UserStoresRepository>();
+
+            services.AddScoped<ICargosRepository, CargosRepository>();
+            services.AddScoped<ILocationCargosRepository, LocationCargosRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ILocationSizesRepository, LocationSizesRepository>();
+            services.AddScoped<IUserOperationsRepository, UserOperationsRepository>();
             return services;
         }
     }

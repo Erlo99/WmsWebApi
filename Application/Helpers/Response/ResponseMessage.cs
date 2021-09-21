@@ -9,6 +9,6 @@ namespace Application.Helpers
 {
     public static class ResponseMessage
     {
-        public const string BadRequestForId = "Could not find data with provided ID";
+        public const string BadRequestForId = "Could not find data with provided ID or you don't have permissions";
     }
 }

@@ -3,6 +3,7 @@ using Application.DTO.Users;
 using Application.Entities;
 using Application.Helpers;
 using Domain.Entities;
+using Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,10 @@ namespace Application.interfaces
         public (IEnumerable<UsersDto>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, string username = null, RolesEnum? role = null);
 
         public UsersDto GetById(int id);
+        public UsersDto GetCurrentUser();
 
-        public UsersDto Authenticate(string username, string password);
+        public bool CanCurrentUserManipulateData(Users existingUser, Users modifiedUser = null);
+
 
         public void UpdateUser(int id, UpdateUsersDTO user);
 

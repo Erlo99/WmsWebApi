@@ -5,6 +5,7 @@ using Domain.Entities.Views;
 using Infrastructure.Data.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,9 +22,11 @@ namespace Infrastructure.Data
     public class WmsContext : DbContext
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public WmsContext( DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
+        private readonly ILogger _logger;
+        public WmsContext( DbContextOptions options, IHttpContextAccessor httpContextAccessor, ILogger logger) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public DbSet<Users> Users { get; set; }
@@ -85,6 +88,10 @@ namespace Infrastructure.Data
                 {
                     ((AuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
                     ((AuditableEntity)entityEntry.Entity).CreatedBy = userName;
+                }
+                if (entityEntry.State == EntityState.Deleted)
+                {
+                    _logger.LogInformation($"User {userName} deleted: " + entityEntry.OriginalValues.ToObject().ToString());
                 }
             }
 

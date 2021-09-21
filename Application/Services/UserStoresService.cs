@@ -40,5 +40,10 @@ namespace Application.Services
 
             return _mapper.Map<IEnumerable<UserStoresDto>>(userStores);
         }
+
+        public bool HasAccessToStore(int userId, int storeId)
+        {
+            return false;
+        }
     }
 }

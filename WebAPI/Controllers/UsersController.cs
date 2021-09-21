@@ -21,25 +21,33 @@ namespace WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
-        public UsersController(IUsersService usersService)
+        private readonly IAuthService _authService;
+        public UsersController(IUsersService usersService, IAuthService authService)
         {
             _usersService = usersService;
+            _authService = authService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("ManagmentUsers")]
+        [SwaggerOperation(Summary = "Returns All users for management user Roles")]
         public IActionResult GetWithFilters(string username = null, RolesEnum? role = null, [FromQuery] PaginationDto pagination = null)
         {
-            pagination = pagination ?? new PaginationDto();
             var users = _usersService.GetAllWithFilters(ref pagination, username, role);
             return Ok(new PagedResponse<UsersDto>(users));
         }
 
-        [HttpGet, Route("{id}")]
+        [HttpGet, Route("{id}"), Authorize("ManagmentUsers")]
+        [SwaggerOperation(Summary = "Returns user data for management user Roles")]
         public IActionResult GetById(int id)
         {
             var user = _usersService.GetById(id);
-            if (user == null)
-                BadRequest(ResponseMessage.BadRequestForId);
+            return Ok(user);
+        }
+        [HttpGet, Route("CurrentUser")]
+        [SwaggerOperation(Summary = "Returns current user data")]
+        public IActionResult GetCurrentUser()
+        {
+            var user = _usersService.GetCurrentUser();
             return Ok(user);
         }
 
@@ -48,31 +56,34 @@ namespace WebAPI.Controllers
         [SwaggerOperation(Summary = "Returns user when credentials are correct")]
         public IActionResult Authenticate(UserAuthenticate userAuthenticate)
         {
-            var user = _usersService.Authenticate(userAuthenticate.UserName, userAuthenticate.Password);
+            var user = _authService.Authenticate(userAuthenticate.UserName, userAuthenticate.Password);
 
             if (user == null)
                 return BadRequest("Incorrect username or password");
             return Ok(new Response<UsersDto>(user));
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("ManagmentUsers")]
+        [SwaggerOperation(Summary = "Adds new user for management user Roles")]
         public IActionResult PostUser(CreateUsersDto userData)
         {
             var user = _usersService.CreateUser(userData);
             return Created($"api/users/{user.Id}", new Response<UsersDto>(user));
         }
 
-        [HttpPut, Route("{id}")]
+        [HttpPut, Route("{id}"), Authorize("ManagmentUsers")]
+        [SwaggerOperation(Summary = "update user data for management user Roles")]
         public IActionResult PutUser(int id, UpdateUsersDTO userData)
         {
             _usersService.UpdateUser(id, userData);
             return NoContent();
         }
 
-        [HttpDelete, Route("{id}")]
+        [HttpDelete, Route("{id}"), Authorize("AdminUsers")]
+        [SwaggerOperation(Summary = "Deletes user data for administrative user Roles")]
         public IActionResult Deleteuser(int id)
         {
-            _usersService.DeleteUser(id);
+                _usersService.DeleteUser(id);
             return NoContent();
         }
     }

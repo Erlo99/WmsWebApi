@@ -1,3 +1,4 @@
+using Application.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,7 +32,7 @@ namespace WebAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -44,8 +45,8 @@ namespace WebAPI
             {
                 app.UseExceptionHandler("/error");
             }
-
-
+            loggerFactory.AddFile("D:\\testLogger");
+            app.UseMiddleware<ExceptionHandler>();
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -2,6 +2,7 @@
 using Application.Helpers;
 using Application.interfaces;
 using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,12 +15,18 @@ namespace WebAPI.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LocationSizesController : ControllerBase
     {
         private readonly ILocationSizesService _locationSizesService;
 
+        public LocationSizesController(ILocationSizesService locationSizesService)
+        {
+            _locationSizesService = locationSizesService;
+        }
+
         // POST: LocationSizesController/Create
-        [HttpPost]
+        [HttpPost, Authorize("ManagmentUsers")]
         public IActionResult Create(LocationSizeDto locationSize)
         {
             var locationSizeCreated = _locationSizesService.Create(locationSize);
@@ -40,13 +47,13 @@ namespace WebAPI.Controllers
             return Ok(new Response<IEnumerable<LocationSizeDto>>(locationSizes));
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize("ManagmentUsers")]
         public IActionResult delete(LocationSizeDto locationSize)
         {
             _locationSizesService.Create(locationSize);
             return NoContent();
         }
-        [HttpPut]
+        [HttpPut, Authorize("ManagmentUsers")]
         public IActionResult Update(LocationSizeDto locationSize)
         {
             _locationSizesService.Update(locationSize);

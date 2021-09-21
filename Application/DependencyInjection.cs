@@ -19,8 +19,16 @@ namespace Application
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IStoresService, StoresService>();
             services.AddScoped<IUserStoresSevice, UserStoresService>();
+
+
+            services.AddScoped<ICargosService, CargosService>();
+            services.AddScoped<ILocationCargosService, LocationCargosService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ILocationSizesService, LocationSizesService>();
+            services.AddScoped<IUserOperationsService, UserOperationsService>();
 
             return services;
         }

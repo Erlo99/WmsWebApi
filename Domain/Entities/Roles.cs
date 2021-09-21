@@ -11,10 +11,11 @@ namespace Domain.Entities
 
     public enum RolesEnum
     {
-        Admin = 0,
-        Manager = 1,
-        Worker = 2,
-        Accountant = 3
+        SuperAdmin = 0,
+        Admin = 1,
+        Manager = 2,
+        Worker = 3,
+        Accountant = 4,
     }
     [Table("Roles")]
     public class Roles

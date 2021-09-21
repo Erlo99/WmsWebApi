@@ -1,7 +1,9 @@
 ﻿using Application.DTO.Users;
 using Application.Helpers;
 using Application.interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize("ManagmentUsers")]
     public class UserStoresController : Controller
     {
         private readonly IUserStoresSevice _UserStoresService;
@@ -21,12 +24,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Returns users stores for management user Roles")]
         public IActionResult GetAllWithFilters(int?  userId = null, int? storeId = null)
         {
             return Ok(new Response<IEnumerable<UserStoresDto>>(_UserStoresService.GetAllWithFilters(userId,storeId)));
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Adds User access to store for management user Roles")]
         public IActionResult Create(UserStoresCreateDto userStore)
         {
             var createdUserStore = _UserStoresService.Create(userStore);
@@ -35,6 +40,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
+        [SwaggerOperation(Summary = "Remove User access to store for management user Roles")]
         public IActionResult Delete(int userId, int storeId)
         {
             _UserStoresService.Delete(userId, storeId);

@@ -19,6 +19,13 @@ namespace WebAPI.Installers
         {
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, AuthenticationHandler>("BasicAuthentication", null);
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ManagmentUsers",
+                     policy => policy.RequireRole("SuperAdmin","Admin","Manager"));
+                options.AddPolicy("AdminUsers",
+                     policy => policy.RequireRole("SuperAdmin","Admin"));
+            });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddApplication();
             services.AddInfrastructure();

@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CargosController : ControllerBase
     {
         private readonly ICargosService _cargosService;
@@ -22,25 +24,26 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Accountant,Admin,SuperAdmin,Manager")]
         public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null, int? barcode = null, string sku = null, string name = null)
         {
             var result = _cargosService.GetAllWithFilters(ref pagination, barcode, sku, name);
             return Ok(new PagedResponse<CargosDto>(result));
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize("AdminUsers")]
         public IActionResult Delete(int barcode)
         {
             _cargosService.Delete(barcode);
             return NoContent();
         }
-        [HttpPost]
+        [HttpPost, Authorize("ManagmentUsers")]
         public IActionResult Create(CargosDto cargos)
         {
             _cargosService.Create(cargos);
             return Created($"/api/Cargos?barcode={cargos.Barcode}", cargos);
         }
-        [HttpPut]
+        [HttpPut, Authorize("ManagmentUsers")]
         public IActionResult Update(CargosDto cargos)
         {
             _cargosService.Update(cargos);

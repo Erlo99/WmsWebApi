@@ -14,5 +14,7 @@ namespace Application.interfaces
         UserStoresDto Create(UserStoresCreateDto userStore);
 
         void Delete(int userId, int StoreId);
+
+        bool HasAccessToStore(int userId, int storeId);
     }
 }

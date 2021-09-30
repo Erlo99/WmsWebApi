@@ -14,16 +14,19 @@ namespace Application.Services
     public class UserStoresService : IUserStoresSevice
     {
         private readonly IUserStoresRepository _userStoresRepository;
+        private readonly IUsersService _usersService;
         private readonly IMapper _mapper;
 
-        public UserStoresService(IUserStoresRepository userStoresRepository, IMapper mapper)
+        public UserStoresService(IUserStoresRepository userStoresRepository, IUsersService usersService, IMapper mapper)
         {
             _userStoresRepository = userStoresRepository;
             _mapper = mapper;
+            _usersService = usersService;
         }
 
         public UserStoresDto Create(UserStoresCreateDto userStoreData)
         {
+            _usersService.GetById(userStoreData.UserId);
             var userStore = _mapper.Map<UserStores>(userStoreData);
             var createdUserStore = _userStoresRepository.Create(userStore);
             return _mapper.Map<UserStoresDto>(createdUserStore);
@@ -31,6 +34,7 @@ namespace Application.Services
 
         public void Delete(int userId, int storeId)
         {
+            _usersService.GetById(userId);
             _userStoresRepository.Delete(userId, storeId);
         }
 
@@ -41,9 +45,9 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<UserStoresDto>>(userStores);
         }
 
-        public bool HasAccessToStore(int userId, int storeId)
+        public void InsertDefaultStoresToUser(int userId)
         {
-            return false;
+            _userStoresRepository.InsertDefaultStores(userId);
         }
     }
 }

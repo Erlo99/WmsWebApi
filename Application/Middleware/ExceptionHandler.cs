@@ -18,7 +18,7 @@ namespace Application.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
 
-        public ExceptionHandler(RequestDelegate next, ILogger logger)
+        public ExceptionHandler(RequestDelegate next, ILogger<ExceptionHandler> logger)
         {
             _next = next;
             _logger = logger;
@@ -53,9 +53,9 @@ namespace Application.Middleware
                     default:
                         // unhandled error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        _logger.LogError(error, message);
                         break;
                 }
-                _logger.LogError(error, message);
                 var result = JsonSerializer.Serialize(new { message =  message});
                 await response.WriteAsync(result);
             }

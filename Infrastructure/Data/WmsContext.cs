@@ -23,7 +23,7 @@ namespace Infrastructure.Data
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
-        public WmsContext( DbContextOptions options, IHttpContextAccessor httpContextAccessor, ILogger logger) : base(options)
+        public WmsContext( DbContextOptions options, IHttpContextAccessor httpContextAccessor, ILogger<WmsContext> logger) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;

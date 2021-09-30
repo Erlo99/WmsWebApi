@@ -39,10 +39,11 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete, Route("{userId}/{storeId}")]
         [SwaggerOperation(Summary = "Remove User access to store for management user Roles")]
         public IActionResult Delete(int userId, int storeId)
         {
+
             _UserStoresService.Delete(userId, storeId);
             return NoContent();
         }

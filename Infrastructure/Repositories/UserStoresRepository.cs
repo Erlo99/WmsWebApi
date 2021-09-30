@@ -45,5 +45,17 @@ namespace Infrastructure.Repositories
             return userStores;
         }
 
+        public void InsertDefaultStores(int userId)
+        {
+            var userStores = _context.UserStores.Where(x => x.UserId == userId);
+            var defaultStores =  _context.Stores.Where(x => x.IsDefault && x.IsActive && !userStores.Any(us => us.StoreId == x.Id)).AsEnumerable();
+            var kek1 = defaultStores.ToList();
+            List<UserStores> defaultUserStores = new List<UserStores>();
+            foreach (var store in defaultStores)
+                defaultUserStores.Add(new UserStores() { UserId = userId, StoreId = store.Id});
+            _context.UserStores.AddRange(defaultUserStores);
+            _context.SaveChanges();
+        }
+
     }
 }

@@ -15,6 +15,6 @@ namespace Application.interfaces
 
         void Delete(int userId, int StoreId);
 
-        bool HasAccessToStore(int userId, int storeId);
+        void InsertDefaultStoresToUser(int userId);
     }
 }

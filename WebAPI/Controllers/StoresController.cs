@@ -3,6 +3,7 @@ using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ namespace WebAPI.Controllers
     public class StoresController : ControllerBase
     {
         private readonly IStoresService _storesService;
-
-        public StoresController(IStoresService storesService)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public StoresController(IStoresService storesService, IHttpContextAccessor httpContextAccessor)
         {
             _storesService = storesService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet, Route("{id}")]
@@ -31,7 +33,7 @@ namespace WebAPI.Controllers
                 return BadRequest(ResponseMessage.BadRequestForId);
             return Ok(new Response<StoresDTO>(store));
         }
-        [HttpGet]
+        [HttpGet, Authorize("AdminUsers")]
         public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null, bool? isActive = null, bool? isDefault = null)
         {
             var stores = _storesService.GetAllWithFilters(ref pagination, isActive, isDefault);

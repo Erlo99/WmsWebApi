@@ -24,14 +24,16 @@ namespace Application.Services
     {
 
         private readonly IUsersRepository _usersRepository;
+        private readonly IUserStoresRepository _userStoresRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UsersService(IUsersRepository usersRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public UsersService(IUsersRepository usersRepository, IMapper mapper, IUserStoresRepository userStoresRepository, IHttpContextAccessor httpContextAccessor)
         {
             _usersRepository = usersRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _userStoresRepository = userStoresRepository;
         }
 
        
@@ -70,7 +72,9 @@ namespace Application.Services
             var user = _mapper.Map<Users>(userData);
             if (user == null || !CanCurrentUserManipulateData(user))
                 throw new BadRequestException(ResponseMessage.BadRequestForId);
-            _usersRepository.CreateUser(user);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user = _usersRepository.CreateUser(user);
+            _userStoresRepository.InsertDefaultStores(user.Id);
             return _mapper.Map<UsersDto>(user);
         }
 

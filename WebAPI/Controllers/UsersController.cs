@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
 
             if (user == null)
                 return BadRequest("Incorrect username or password");
-            return Ok(new Response<UsersDto>(user));
+            return NoContent();
         }
 
         [HttpPost, Authorize("ManagmentUsers")]
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
         public IActionResult PostUser(CreateUsersDto userData)
         {
             var user = _usersService.CreateUser(userData);
-            return Created($"api/users/{user.Id}", new Response<UsersDto>(user));
+            return Created($"api/users/{user.Id}", (user));
         }
 
         [HttpPut, Route("{id}"), Authorize("ManagmentUsers")]

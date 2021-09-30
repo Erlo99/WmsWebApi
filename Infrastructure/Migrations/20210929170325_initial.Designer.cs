@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(WmsContext))]
-    [Migration("20210908135751_UserOpertaionsTableUpdate")]
-    partial class UserOpertaionsTableUpdate
+    [Migration("20210929170325_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -236,21 +236,26 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 0,
-                            Name = "Admin"
+                            Name = "SuperAdmin"
                         },
                         new
                         {
                             Id = 1,
-                            Name = "Manager"
+                            Name = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Worker"
+                            Name = "Manager"
                         },
                         new
                         {
                             Id = 3,
+                            Name = "Worker"
+                        },
+                        new
+                        {
+                            Id = 4,
                             Name = "Accountant"
                         });
                 });
@@ -293,6 +298,37 @@ namespace Infrastructure.Migrations
                         .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Stores");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserOperations", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("LocationName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OperationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OperationName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoreName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserOperations");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserStores", b =>
@@ -357,8 +393,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");

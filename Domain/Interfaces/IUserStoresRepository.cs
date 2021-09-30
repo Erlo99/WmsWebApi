@@ -14,5 +14,7 @@ namespace Domain.Interfaces
         UserStoresView Create(UserStores store);
         void Delete(int userId, int storeId);
 
+        void InsertDefaultStores(int userId);
+
     }
 }

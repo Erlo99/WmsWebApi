@@ -17,7 +17,7 @@ namespace Application.DTO
 
         public virtual void Mapping(Profile profile)
         {
-            profile.CreateMap<StoreCreateDto,Stores>();
+            profile.CreateMap<StoreCreateDto,Store>();
         }
     }
 }

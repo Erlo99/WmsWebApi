@@ -18,17 +18,17 @@ namespace Application
 
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IStoresService, StoresService>();
-            services.AddScoped<IUserStoresSevice, UserStoresService>();
+            services.AddScoped<IStoreService, StoreService>();
+            services.AddScoped<IUserStoreSevice, UserStoreService>();
 
 
-            services.AddScoped<ICargosService, CargosService>();
-            services.AddScoped<ILocationCargosService, LocationCargosService>();
+            services.AddScoped<ICargoService, CargoService>();
+            services.AddScoped<ILocationCargoService, LocationCargoService>();
             services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<ILocationSizesService, LocationSizesService>();
-            services.AddScoped<IUserOperationsService, UserOperationsService>();
+            services.AddScoped<ILocationSizeService, LocationSizeService>();
+            services.AddScoped<IUserOperationService, UserOperationService>();
 
             return services;
         }

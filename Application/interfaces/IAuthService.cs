@@ -9,6 +9,6 @@ namespace Application.interfaces
 {
     public interface IAuthService
     {
-        public UsersDto Authenticate(string username, string password);
+        public UserDto Authenticate(string username, string password);
     }
 }

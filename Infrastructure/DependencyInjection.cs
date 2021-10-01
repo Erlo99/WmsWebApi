@@ -14,16 +14,16 @@ namespace Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
 
-            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IStoresRepository, StoresRepository>();
-            services.AddScoped<IUserStoresRepository, UserStoresRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IUserStoreRepository, UserStoreRepository>();
 
-            services.AddScoped<ICargosRepository, CargosRepository>();
-            services.AddScoped<ILocationCargosRepository, LocationCargosRepository>();
+            services.AddScoped<ICargoRepository, CargoRepository>();
+            services.AddScoped<ILocationCargoRepository, LocationCargoRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
-            services.AddScoped<ILocationSizesRepository, LocationSizesRepository>();
-            services.AddScoped<IUserOperationsRepository, UserOperationsRepository>();
+            services.AddScoped<ILocationSizeRepository, LocationSizeRepository>();
+            services.AddScoped<IUserOperationRepository, UserOperationRepository>();
             return services;
         }
     }

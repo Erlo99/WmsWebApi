@@ -9,6 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IAuthRepository
     {
-        public Users Authenticate(string username, string password);
+        public User Authenticate(string username, string password);
     }
 }

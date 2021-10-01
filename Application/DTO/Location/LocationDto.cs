@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTO.Location
+namespace Application.DTO.Locations
 {
     public class LocationDto : IMap
     {
@@ -18,7 +18,7 @@ namespace Application.DTO.Location
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<LocationDto, Locations>();
+            profile.CreateMap<LocationDto, Location>();
         }
     }
 }

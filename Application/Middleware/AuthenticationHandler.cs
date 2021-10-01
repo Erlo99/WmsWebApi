@@ -20,7 +20,6 @@ namespace Application.Middleware
     public class AuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly IAuthService _authService;
-
         public AuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
@@ -34,7 +33,7 @@ namespace Application.Middleware
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            UsersDto user;
+            UserDto user;
             try
             {
                 var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
@@ -50,11 +49,13 @@ namespace Application.Middleware
 
             var claims = new[] {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, Enum.GetName(typeof(RolesEnum), user.RoleId))
+                new Claim(ClaimTypes.Role, Enum.GetName(typeof(RolesEnum), user.RoleId)),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
+
             return AuthenticateResult.Success(ticket);
         }
     }

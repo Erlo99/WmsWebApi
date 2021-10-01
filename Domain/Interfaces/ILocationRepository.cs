@@ -9,10 +9,10 @@ namespace Domain.Interfaces
 {
     public interface ILocationRepository
     {
-        Locations GetById(int locationId);
-        IEnumerable<Locations> GetAllWithFilters(ref Pagination pagination,int storeId, string column =null, int? row = null);
-        Locations Create(Locations  location);
-        void Update(Locations location);
+        Location GetById(int locationId);
+        IEnumerable<Location> GetAllWithFilters(ref Pagination pagination,int? storeId = null, string column =null, int? row = null);
+        Location Create(Location  location);
+        void Update(Location location);
 
         void Remove(int locationId);
     }

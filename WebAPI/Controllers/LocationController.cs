@@ -1,5 +1,5 @@
 ﻿using Application.DTO;
-using Application.DTO.Location;
+using Application.DTO.Locations;
 using Application.Helpers;
 using Application.interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace WebAPI.Controllers
 {
@@ -28,10 +29,10 @@ namespace WebAPI.Controllers
         public IActionResult Create(LocationDto location)
         {
             var locationCreated = _locationService.Create(location);
-            return Created($"api/locationSizes/{locationCreated.Id}", new Response<CreateLocationsDto>(locationCreated));
+            return Created($"api/locationSizes/{locationCreated.Id}", locationCreated);
         }
 
-        [HttpGet, Route("{id}")]
+        [HttpGet, Route("{id}"), Authorize("ManagmentUsers")]
         public IActionResult GetById(int id)
         {
             var location = _locationService.GetById(id);

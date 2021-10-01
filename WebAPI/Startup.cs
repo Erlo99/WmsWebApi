@@ -1,6 +1,7 @@
 using Application.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,8 +54,11 @@ namespace WebAPI
             app.UseMiddleware<ExceptionHandler>();
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            var httpContextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
+            System.Web.HttpContext.Configure(httpContextAccessor);
 
+            app.UseRouting();
+            
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Users Authenticate(string username, string password)
+        public User Authenticate(string username, string password)
         {
             var user = _context.Users.FirstOrDefault(x => x.UserName == username && x.Password == password);
             return user;

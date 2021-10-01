@@ -29,20 +29,20 @@ namespace Infrastructure.Data
             _logger = logger;
         }
 
-        public DbSet<Users> Users { get; set; }
-        public DbSet<Roles> Roles { get; set; }
-        public DbSet<Stores> Stores { get; set; }
-        public DbSet<UserStores> UserStores { get; set; }
-        public DbSet<Operations> Operations { get; set; }
-        public DbSet<UserOperations> UserOperations { get; set; }
-        public DbSet<Cargos> Cargos { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Store> Stores { get; set; }
+        public DbSet<UserStore> UserStores { get; set; }
+        public DbSet<Operation> Operations { get; set; }
+        public DbSet<UserOperation> UserOperations { get; set; }
+        public DbSet<Cargo> Cargos { get; set; }
         public DbSet<LocationSize> LocationSizes { get; set; }
-        public DbSet<Locations> Locations { get; set; }
-        public DbSet<LocationCargos> LocationCargos { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<LocationCargo> LocationCargos { get; set; }
 
         #region Views
-        public DbSet<UserStoresView> userStoresViews { get; set; }
-        public DbSet<UserOperationsView> UserOperationsView { get; set; }
+        public DbSet<UserStoreView> userStoresViews { get; set; }
+        public DbSet<UserOperationView> UserOperationsView { get; set; }
 
 
         #endregion

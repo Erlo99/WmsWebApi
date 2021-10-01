@@ -7,40 +7,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Infrastructure.Repositories
 {
     public class LocationRepository : ILocationRepository
     {
         private readonly WmsContext _context;
+        private readonly IUserStoreRepository _userStoreRepository;
 
-        public LocationRepository(WmsContext context)
+        public LocationRepository(WmsContext context, IUserStoreRepository userStoreRepository)
         {
             _context = context;
+            _userStoreRepository = userStoreRepository;
         }
 
-        public Locations Create(Locations location)
+        public Location Create(Location location)
         {
             _context.Locations.Add(location);
             _context.SaveChanges();
             return location;
         }
 
-        public IEnumerable<Locations> GetAllWithFilters(ref Pagination pagination, int storeId, string column = null, int? row = null)
+        public IEnumerable<Location> GetAllWithFilters(ref Pagination pagination, int? storeId = null, string column = null, int? row = null)
         {
 
-            var locations = _context.Locations.Where(x => x.StoreId == storeId).AsEnumerable();
+            var locations = _context.Locations.AsEnumerable();
+            List<int> stores;
+            if (!HttpContext.IsCurrentUserAdmin())
+            {
+                stores = _userStoreRepository.GetAllWithFilters(HttpContext.GetUserId()).Select(s => s.StoreId).ToList();
+                locations.Where(x => stores.Contains(x.StoreId));
+            }
 
-
+            if (column != null)
+                locations.Where(x => x.StoreId == storeId);
             if (column != null)
                 locations.Where(x => x.Column == column);
             if (row != null)
                 locations.Where(x => x.Row == row);
 
-            return PaginationHandler.Page<Locations>(locations, ref pagination);
+            return PaginationHandler.Page(locations, ref pagination);
         }
 
-        public Locations GetById(int locationId)
+        public Location GetById(int locationId)
         {
             return _context.Locations.SingleOrDefault(x => x.Id == locationId);
         }
@@ -52,7 +62,7 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public void Update(Locations location)
+        public void Update(Location location)
         {
             _context.Locations.Update(location);
             _context.SaveChanges();

@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Services;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +17,13 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Accountant,Admin,SuperAdmin,Manager")]
-    public class OperationController : ControllerBase
+    public class LocationCargoOperationController : ControllerBase
     {
-        private readonly IUserOperationService _userOperationsService;
+        private readonly ILocationCargoOperationSevice _locationCargoOperationService;
 
-        public OperationController(IUserOperationService userOperationsService)
+        public LocationCargoOperationController(ILocationCargoOperationSevice locationCargoOperationService)
         {
-            _userOperationsService = userOperationsService;
+            _locationCargoOperationService = locationCargoOperationService;
         }
 
         [HttpGet]
@@ -37,9 +38,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet, Route("UserOperations")]
-        public IActionResult GetAllUserOperationsWithFilters([FromQuery] PaginationDto pagination, string userName = null, string LocationName = null, DateTime? operationDate = null, string storeName = null, string operationName = null)
+        public IActionResult GetAllLocationCargoOperationsWithFilters([FromQuery] PaginationDto pagination, [FromQuery] LocationCargoOperationDto operation = null)
         {
-            return Ok( new PagedResponse<UserOperationDto>(_userOperationsService.GetAllWithFilters(ref pagination, userName, LocationName, operationDate, storeName, operationName)));
+            var result = _locationCargoOperationService.GetAllWithFilters(ref pagination, operation);
+            return Ok( new PagedResponse<LocationCargoOperationDto>(result));
             
         }
 

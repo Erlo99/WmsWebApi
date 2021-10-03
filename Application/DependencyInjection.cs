@@ -28,7 +28,6 @@ namespace Application
             services.AddScoped<ILocationCargoService, LocationCargoService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILocationSizeService, LocationSizeService>();
-            services.AddScoped<IUserOperationService, UserOperationService>();
 
             return services;
         }

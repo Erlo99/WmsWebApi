@@ -23,7 +23,7 @@ namespace Infrastructure
             services.AddScoped<ILocationCargoRepository, LocationCargoRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ILocationSizeRepository, LocationSizeRepository>();
-            services.AddScoped<IUserOperationRepository, UserOperationRepository>();
+            services.AddScoped<ILocationCargoOperationRepository, LocationCargoOperationRepository>();
             return services;
         }
     }

@@ -20,12 +20,14 @@ namespace Application.Services
         private readonly IMapper _mapper;
         private readonly ILocationService _locationService;
         private readonly ILocationCargoOperationRepository _locationCargoOperationRepository;
-        public LocationCargoService(ILocationCargoRepository locationCargosRepository, IMapper mapper, ILocationService locationService, ILocationCargoOperationRepository locationCargoOperationRepository)
+        private readonly ILocationSizeService _locationSizeService;
+        public LocationCargoService(ILocationCargoRepository locationCargosRepository, IMapper mapper, ILocationService locationService, ILocationCargoOperationRepository locationCargoOperationRepository, ILocationSizeService locationSizeService)
         {
             _locationCargosRepository = locationCargosRepository;
             _mapper = mapper;
             _locationService = locationService;
             _locationCargoOperationRepository = locationCargoOperationRepository;
+            _locationSizeService = locationSizeService;
         }
 
         public CreateLocationCargoDto Create(LocationCargoDto locationCargo)
@@ -51,6 +53,7 @@ namespace Application.Services
         public IEnumerable<LocationCargoDto> GetAllWithFilters(int? locationId = null, int? barcode = null)
         {
             var locationCargos = _locationCargosRepository.GetAllWithFilters(locationId, barcode).ToList();
+            
             foreach (var location in locationCargos.Select(x => x.LocationId).Distinct())
                 try
                 {
@@ -71,8 +74,6 @@ namespace Application.Services
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
             var existingLocationCargo = _locationCargosRepository.GetAllWithFilters(locationCargo.LocationId, locationCargo.Barcode).SingleOrDefault();
 
-            
-
             if (existingLocationCargo == null)
             {
                 if (locationCargo.Qty < 1) throw new BadRequestException("Quantity must be greater than 0");
@@ -80,18 +81,28 @@ namespace Application.Services
             }
             else
             {
-                if (existingLocationCargo.Qty - locationCargo.Qty < 0)
-                    throw new BadRequestException("Provided quanitity must be lower or equal to cargo quantity");
-                var locationCargoToUpdate = _mapper.Map(locationCargo, existingLocationCargo);
-                _locationCargosRepository.Update(locationCargoToUpdate);
-                _locationCargoOperationRepository.AddOperation(new LocationCargoOperation()
+                int locationSizeId = _locationService.GetById(locationCargo.LocationId).Id;
+                int totalQty = existingLocationCargo.Qty + locationCargo.Qty;
+                int locationQty = _locationSizeService.GetById(locationSizeId).Qty;
+                if (totalQty < 0 || totalQty > _locationSizeService.GetById(locationSizeId).Qty)
+                    throw new BadRequestException("Incorrect Quantity Or Full Location");
+                if (0 == totalQty)
+                    _locationCargosRepository.Delete(existingLocationCargo.Id);
+                else
                 {
-                    OperationId = OperationEnum.RemoveCargo,
-                    Qty = locationCargo.Qty,
-                    UserId = HttpContext.GetUserId(),
-                    Barcode = locationCargo.Barcode,
-                    LocationId = locationCargo.LocationId
-                });
+                    locationCargo.Qty = totalQty;
+                    var locationCargoToUpdate = _mapper.Map(locationCargo, existingLocationCargo);
+                    _locationCargosRepository.Update(locationCargoToUpdate);
+                    _locationCargoOperationRepository.AddOperation(new LocationCargoOperation()
+                    {
+                        OperationId = totalQty == 0 ? OperationEnum.RemoveCargo : locationCargo.Qty > 0 ? OperationEnum.AddQuantity : OperationEnum.RemoveQuantity,
+                        Qty = locationCargo.Qty,
+                        UserId = HttpContext.GetUserId(),
+                        Barcode = locationCargo.Barcode,
+                        LocationId = locationCargo.LocationId
+                    });
+                }
+                
             }
             
         }

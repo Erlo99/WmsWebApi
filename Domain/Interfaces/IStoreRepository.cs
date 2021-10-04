@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface IStoreRepository
     {
         Store GetById(int id);
-        IEnumerable<Store> GetWithFilters(ref Pagination pagination, bool? isActive = null, bool? isDefault = null);
+        IEnumerable<Store> GetWithFilters(ref Pagination pagination, bool? isActive = null, bool? isDefault = null, string name = null);
         void Update(Store store);
         Store Create(Store store);
         void Delete(int id);

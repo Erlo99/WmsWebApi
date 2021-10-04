@@ -33,9 +33,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllWithFiltersAdmin([FromQuery] PaginationDto pagination = null, bool? isActive = null, bool? isDefault = null)
+        public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null, bool? isActive = null, bool? isDefault = null, string name = null)
         {
-            var stores = _storesService.GetAllWithFilters(ref pagination, isActive, isDefault);
+            var stores = _storesService.GetAllWithFilters(ref pagination, isActive, isDefault, name);
             return Ok(new PagedResponse<StoreDTO>(stores));
         }
         [HttpPost]

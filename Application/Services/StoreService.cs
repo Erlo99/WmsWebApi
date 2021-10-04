@@ -26,7 +26,7 @@ namespace Application.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public (IEnumerable<StoreDTO>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, bool? isActive = null, bool? isDefault = null)
+        public (IEnumerable<StoreDTO>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, bool? isActive = null, bool? isDefault = null, string name = null)
         {
 
             Pagination pagination = _mapper.Map<Pagination>(paginationData);

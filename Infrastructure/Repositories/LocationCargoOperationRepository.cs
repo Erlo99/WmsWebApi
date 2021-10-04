@@ -29,17 +29,17 @@ namespace Infrastructure.Repositories
         {
             var locationCargoOperation = _context.LocationCargoOperation.AsEnumerable();
             if(operation.Barcode != null)
-                locationCargoOperation.Where(x => x.Barcode == operation.Barcode);
+                locationCargoOperation = locationCargoOperation.Where(x => x.Barcode == operation.Barcode);
             if (operation.CreateAt != null)
-                locationCargoOperation.Where(x => x.CreateAt == operation.CreateAt);
+                locationCargoOperation = locationCargoOperation.Where(x => x.CreateAt == operation.CreateAt);
             if (operation.LocationId != null)
-                locationCargoOperation.Where(x => x.LocationId == operation.LocationId);
+                locationCargoOperation = locationCargoOperation.Where(x => x.LocationId == operation.LocationId);
             if (operation.OperationId != null)
-                locationCargoOperation.Where(x => x.OperationId == operation.OperationId);
+                locationCargoOperation = locationCargoOperation.Where(x => x.OperationId == operation.OperationId);
             if (operation.Qty != null)
-                locationCargoOperation.Where(x => x.Qty == operation.Qty);
+                locationCargoOperation = locationCargoOperation.Where(x => x.Qty == operation.Qty);
             if (operation.UserId != null)
-                locationCargoOperation.Where(x => x.UserId == operation.UserId);
+                locationCargoOperation = locationCargoOperation.Where(x => x.UserId == operation.UserId);
 
             return PaginationHandler.Page(locationCargoOperation, ref pagination);
         }

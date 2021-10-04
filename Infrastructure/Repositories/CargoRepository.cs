@@ -43,11 +43,11 @@ namespace Infrastructure.Repositories
             var cargos = _context.Cargos.AsEnumerable();
 
             if (barcode != null)
-                cargos.Where(x => x.Barcode == barcode);
+                cargos = cargos.Where(x => x.Barcode == barcode);
             if (sku != null)
-                cargos.Where(x => x.Sku == sku);
+                cargos = cargos.Where(x => x.Sku == sku);
             if (name != null)
-                cargos.Where(x => x.Name == name);
+                cargos = cargos.Where(x => x.Name == name);
 
             return PaginationHandler.Page(cargos, ref pagination);
             }

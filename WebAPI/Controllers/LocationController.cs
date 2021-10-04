@@ -36,14 +36,14 @@ namespace WebAPI.Controllers
         public IActionResult GetById(int id)
         {
             var location = _locationService.GetById(id);
-            return Ok(new Response<LocationDto>(location));
+            return Ok(new Response<CreateLocationDto>(location));
         }
 
         [HttpGet]
         public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination, int storeId, string column = null, int? row = null)
         {
             var location = _locationService.GetWithFilters(ref pagination, storeId, column,row);
-            return Ok(new PagedResponse<LocationDto>(location));
+            return Ok(new PagedResponse<CreateLocationDto>(location));
         }
 
         [HttpDelete]

@@ -22,7 +22,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public LocationSizeDto Create(LocationSizeDto locationSize)
+        public LocationSizeDto Create(CreateLocationSizeDto locationSize)
         {
             var locationSizeToChange = _mapper.Map<LocationSize>(locationSize);
             var newLocationSize = _locationSizesRepository.Create(locationSizeToChange);
@@ -46,9 +46,9 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<LocationSizeDto>>(locationSizes);
         }
 
-        public void Update(LocationSizeDto locationSize)
+        public void Update(int id, CreateLocationSizeDto locationSize)
         {
-            var locationSizeToUpdate = _locationSizesRepository.GetById(locationSize.Id);
+            var locationSizeToUpdate = _locationSizesRepository.GetById(id);
             var locationSizeUpdated = _mapper.Map(locationSize, locationSizeToUpdate);
             _locationSizesRepository.Update(locationSizeToUpdate);
         }

@@ -13,6 +13,8 @@ namespace Domain.Entities
     {
         AddCargo,
         RemoveCargo,
+        AddQuantity,
+        RemoveQuantity
 
     }
     [Table("Operations")]

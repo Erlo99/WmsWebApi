@@ -37,14 +37,16 @@ namespace Infrastructure.Repositories
             return _context.Stores.SingleOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<Store> GetWithFilters(ref Pagination pagination, bool? isActive = null, bool? isDefault = null)
+        public IEnumerable<Store> GetWithFilters(ref Pagination pagination, bool? isActive = null, bool? isDefault = null, string name = null)
         {
             var stores = _context.Stores.AsEnumerable();
             
             if (isActive != null)
-                stores.Where(x => x.IsActive == isActive);
+                stores = stores.Where(x => x.IsActive == isActive);
             if (isDefault != null)
-                stores.Where(x => x.IsDefault == isDefault);
+                stores = stores.Where(x => x.IsDefault == isDefault);
+            if (name != null)
+                stores = stores.Where(x => x.Name == name);
 
             return PaginationHandler.Page(stores, ref pagination);
             }

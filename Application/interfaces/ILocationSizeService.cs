@@ -11,8 +11,8 @@ namespace Application.interfaces
     {
         LocationSizeDto GetById(int id);
         IEnumerable<LocationSizeDto> GetWithFilters(string Category = null, string SizeName = null, int? quantity = null);
-        void Update(LocationSizeDto store);
-        LocationSizeDto Create(LocationSizeDto store);
+        void Update(int id, CreateLocationSizeDto store);
+        LocationSizeDto Create(CreateLocationSizeDto store);
         void Delete(int id);
     }
 }

@@ -21,26 +21,33 @@ namespace Infrastructure.Repositories
 
         public LocationCargo Create(LocationCargo locationCargo)
         {
-            _context.Add(locationCargo);
+            _context.LocationCargos.Add(locationCargo);
             _context.SaveChanges();
             return locationCargo;
+        }
+
+        public void Delete(int id)
+        {
+            var locationCargoToRemove = _context.LocationCargos.SingleOrDefault(x => x.Id == id);
+            _context.LocationCargos.Remove(locationCargoToRemove);
+            _context.SaveChanges();
         }
 
         public IEnumerable<LocationCargo> GetAllWithFilters(int? locationId = null, int? barcode = null)
         {
             
             var locationCargos = _context.LocationCargos.AsEnumerable();
-            if (locationId == null)
-                locationCargos.Where(x => x.LocationId == locationId);
-            if (barcode == null)
-                locationCargos.Where(x => x.Barcode == barcode);
+            if (locationId != null)
+                locationCargos = locationCargos.Where(x => x.LocationId == locationId);
+            if (barcode != null)
+                locationCargos = locationCargos.Where(x => x.Barcode == barcode);
 
             return locationCargos;
         }
 
         public void Update(LocationCargo locationCargo)
         {
-            _context.Update(locationCargo);
+            _context.LocationCargos.Update(locationCargo);
             _context.SaveChanges();
         }
     }

@@ -13,7 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Worker,Admin,SuperAdmin,Manager")]
     public class LocationCargoController : ControllerBase
     {
         private readonly ILocationCargoService _locationCargosService;
@@ -30,7 +30,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Worker,Admin,SuperAdmin,Manager")]
         public IActionResult Update(LocationCargoDto locationCargo)
         {
             _locationCargosService.Update(locationCargo);

@@ -19,6 +19,7 @@ namespace Application.DTO.Locations
         public void Mapping(Profile profile)
         {
             profile.CreateMap<LocationDto, Location>();
+            profile.CreateMap<Location, LocationDto>();
         }
     }
 }

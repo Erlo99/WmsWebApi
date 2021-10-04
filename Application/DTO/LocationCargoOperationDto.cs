@@ -21,6 +21,7 @@ namespace Application.DTO
         public void Mapping(Profile profile)
         {
             profile.CreateMap<LocationCargoOperation, LocationCargoOperationDto>();
+            profile.CreateMap<LocationCargoOperationDto, LocationCargoOperation>();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Domain.Entities.Cargos", b =>
+            modelBuilder.Entity("Domain.Entities.Cargo", b =>
                 {
                     b.Property<int>("Barcode")
                         .HasColumnType("int");
@@ -53,7 +53,51 @@ namespace Infrastructure.Migrations
                     b.ToTable("Cargos");
                 });
 
-            modelBuilder.Entity("Domain.Entities.LocationCargos", b =>
+            modelBuilder.Entity("Domain.Entities.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Column")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Row")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SizeId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationCargo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,6 +134,36 @@ namespace Infrastructure.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("LocationCargos");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationCargoOperation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("Barcode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OperationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Qty")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LocationCargoOperation");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationSize", b =>
@@ -140,51 +214,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("LocationSize");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Locations", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Column")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Row")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StoreId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SizeId");
-
-                    b.HasIndex("StoreId");
-
-                    b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Operations", b =>
+            modelBuilder.Entity("Domain.Entities.Operation", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
@@ -202,21 +232,26 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 0,
-                            Name = "test1"
+                            Name = "AddCargo"
                         },
                         new
                         {
                             Id = 1,
-                            Name = "test2"
+                            Name = "RemoveCargo"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "test3"
+                            Name = "AddQuantity"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RemoveQuantity"
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Roles", b =>
+            modelBuilder.Entity("Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
@@ -258,7 +293,7 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Stores", b =>
+            modelBuilder.Entity("Domain.Entities.Store", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -298,7 +333,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserOperations", b =>
+            modelBuilder.Entity("Domain.Entities.UserOperation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -329,7 +364,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserOperations");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserStores", b =>
+            modelBuilder.Entity("Domain.Entities.UserStore", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -358,7 +393,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserStores");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Users.Users", b =>
+            modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -411,7 +446,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Views.UserOperationsView", b =>
+            modelBuilder.Entity("Domain.Entities.Views.UserOperationView", b =>
                 {
                     b.Property<string>("Details")
                         .HasColumnType("nvarchar(max)");
@@ -434,7 +469,7 @@ namespace Infrastructure.Migrations
                     b.ToView("UserOperations_VV");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Views.UserStoresView", b =>
+            modelBuilder.Entity("Domain.Entities.Views.UserStoreView", b =>
                 {
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
@@ -451,26 +486,7 @@ namespace Infrastructure.Migrations
                     b.ToView("UserStores_VV");
                 });
 
-            modelBuilder.Entity("Domain.Entities.LocationCargos", b =>
-                {
-                    b.HasOne("Domain.Entities.Cargos", "Cargos")
-                        .WithMany()
-                        .HasForeignKey("Barcode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Locations", "Locations")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cargos");
-
-                    b.Navigation("Locations");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Locations", b =>
+            modelBuilder.Entity("Domain.Entities.Location", b =>
                 {
                     b.HasOne("Domain.Entities.LocationSize", "LocationSize")
                         .WithMany()
@@ -478,7 +494,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Stores", "Stores")
+                    b.HasOne("Domain.Entities.Store", "Stores")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -489,15 +505,34 @@ namespace Infrastructure.Migrations
                     b.Navigation("Stores");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserStores", b =>
+            modelBuilder.Entity("Domain.Entities.LocationCargo", b =>
                 {
-                    b.HasOne("Domain.Entities.Stores", "Stores")
+                    b.HasOne("Domain.Entities.Cargo", "Cargos")
+                        .WithMany()
+                        .HasForeignKey("Barcode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Location", "Locations")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cargos");
+
+                    b.Navigation("Locations");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserStore", b =>
+                {
+                    b.HasOne("Domain.Entities.Store", "Stores")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Users.Users", "Users")
+                    b.HasOne("Domain.Entities.Users.User", "Users")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -508,9 +543,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Users.Users", b =>
+            modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
-                    b.HasOne("Domain.Entities.Roles", "Roles")
+                    b.HasOne("Domain.Entities.Role", "Roles")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)

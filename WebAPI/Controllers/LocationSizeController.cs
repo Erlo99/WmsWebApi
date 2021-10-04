@@ -26,8 +26,8 @@ namespace WebAPI.Controllers
         }
 
         // POST: LocationSizesController/Create
-        [HttpPost, Authorize("ManagmentUsers")]
-        public IActionResult Create(LocationSizeDto locationSize)
+        [HttpPost, Authorize("AdminUsers")]
+        public IActionResult Create(CreateLocationSizeDto locationSize)
         {
             var locationSizeCreated = _locationSizesService.Create(locationSize);
             return Created($"api/locationSizes/{locationSizeCreated.Id}", locationSize);
@@ -40,23 +40,23 @@ namespace WebAPI.Controllers
             return Ok(new Response<LocationSizeDto>(locationSize));
         }
 
-        [HttpGet, Authorize("ManagmentUsers")]
+        [HttpGet, Authorize("AdminUsers")]
         public IActionResult GetAllWithFilters(string category = null, string sizeName = null, int? quantity = null)
         {
             var locationSizes = _locationSizesService.GetWithFilters(category, sizeName, quantity);
             return Ok(new Response<IEnumerable<LocationSizeDto>>(locationSizes));
         }
 
-        [HttpDelete, Authorize("ManagmentUsers")]
-        public IActionResult delete(LocationSizeDto locationSize)
+        [HttpDelete, Authorize("AdminUsers")]
+        public IActionResult delete(int id)
         {
-            _locationSizesService.Create(locationSize);
+            _locationSizesService.Delete(id);
             return NoContent();
         }
-        [HttpPut, Authorize("ManagmentUsers")]
-        public IActionResult Update(LocationSizeDto locationSize)
+        [HttpPut, Authorize("AdminUsers"), Route("{id}")]
+        public IActionResult Update(int id, CreateLocationSizeDto locationSize)
         {
-            _locationSizesService.Update(locationSize);
+            _locationSizesService.Update(id, locationSize);
             return NoContent();
         }
 

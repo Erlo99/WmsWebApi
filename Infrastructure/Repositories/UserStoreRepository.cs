@@ -43,7 +43,7 @@ namespace Infrastructure.Repositories
             if (!HttpContext.IsCurrentUserAdmin())
             {
                 stores = userStores.Where(x => x.UserId == HttpContext.GetUserId()).Select(s => s.StoreId).ToList();
-                userStores.Where(x => stores.Contains(x.StoreId));
+                userStores = userStores.Where(x => stores.Contains(x.StoreId));
             }
 
             if (userId != null)

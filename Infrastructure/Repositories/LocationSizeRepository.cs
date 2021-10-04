@@ -41,11 +41,11 @@ namespace Infrastructure.Repositories
         {
             var locationSizes = _context.LocationSizes.AsEnumerable();
             if (category != null)
-                locationSizes.Where(x => x.Category == category);
+                locationSizes = locationSizes.Where(x => x.Category == category);
             if (sizeName != null)
-                locationSizes.Where(x => x.SizeName == sizeName);
+                locationSizes = locationSizes.Where(x => x.SizeName == sizeName);
             if (quantity != null)
-                locationSizes.Where(x => x.Qty == quantity);
+                locationSizes = locationSizes.Where(x => x.Qty == quantity);
             return locationSizes;
         }
 

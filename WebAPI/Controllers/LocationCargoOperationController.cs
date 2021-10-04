@@ -30,9 +30,9 @@ namespace WebAPI.Controllers
         public IActionResult GetAllOperations()
         {
             var dict = new Dictionary<int, string>();
-            foreach (var name in Enum.GetNames(typeof(Operation)))
+            foreach (var name in Enum.GetNames(typeof(OperationEnum)))
             {
-                dict.Add((int)Enum.Parse(typeof(Operation), name), name);
+                dict.Add((int)Enum.Parse(typeof(OperationEnum), name), name);
             }
             return (Ok(new Response<Dictionary<int, string>>(dict)));
         }

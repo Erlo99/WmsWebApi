@@ -33,7 +33,9 @@ namespace Application.Services
             if (!HttpContext.IsCurrentUserAdmin())
                 if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), location.StoreId) == null)
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
-                
+
+            if (location.Column.Length > 2)
+                throw new BadRequestException("Column max lenght is 2");
             var newLocation = _mapper.Map<Location>(location);
             var createdLocation = _locationRepository.Create(newLocation);
             return _mapper.Map<CreateLocationDto>(createdLocation);
@@ -47,22 +49,22 @@ namespace Application.Services
             _locationRepository.Remove(id);
         }
 
-        public LocationDto GetById(int id)
+        public CreateLocationDto GetById(int id)
         {
             if (!HttpContext.IsCurrentUserAdmin())
                 if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), id) == null)
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
-            return _mapper.Map<LocationDto>(_locationRepository.GetById(id));
+            return _mapper.Map<CreateLocationDto>(_locationRepository.GetById(id));
         }
 
-        public (IEnumerable<LocationDto>, PagedDto) GetWithFilters(ref PaginationDto paginationData, int? storeId = null, string column = null, int? row = null)
+        public (IEnumerable<CreateLocationDto>, PagedDto) GetWithFilters(ref PaginationDto paginationData, int? storeId = null, string column = null, int? row = null)
         {
             
             Pagination pagination = _mapper.Map<Pagination>(paginationData);
 
-            var locations = _locationRepository.GetAllWithFilters(ref pagination, storeId, column, row).ToList();
+            var locations = _locationRepository.GetAllWithFilters(ref pagination, storeId, column, row);
             var paged = _mapper.Map<PagedDto>(pagination);
-            return (_mapper.Map<IEnumerable<LocationDto>>(locations.AsEnumerable()), paged);
+            return (_mapper.Map<IEnumerable<CreateLocationDto>>(locations), paged);
         }
 
         public void Update(int locationId, LocationDto location)
@@ -70,6 +72,9 @@ namespace Application.Services
             if (!HttpContext.IsCurrentUserAdmin())
                 if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), location.StoreId) == null)
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
+            if (location.Column.Length > 2)
+                throw new BadRequestException("Column max lenght is 2");
+
             var existingLocation = _locationRepository.GetById(locationId);
             var locationToUpdate = _mapper.Map(location, existingLocation);
             _locationRepository.Update(locationToUpdate);

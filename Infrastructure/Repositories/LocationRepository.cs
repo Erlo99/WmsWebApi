@@ -37,15 +37,15 @@ namespace Infrastructure.Repositories
             if (!HttpContext.IsCurrentUserAdmin())
             {
                 stores = _userStoreRepository.GetAllWithFilters(HttpContext.GetUserId()).Select(s => s.StoreId).ToList();
-                locations.Where(x => stores.Contains(x.StoreId));
+                locations = locations.Where(x => stores.Contains(x.StoreId));
             }
 
             if (column != null)
-                locations.Where(x => x.StoreId == storeId);
+                locations = locations.Where(x => x.StoreId == storeId);
             if (column != null)
-                locations.Where(x => x.Column == column);
+                locations = locations.Where(x => x.Column == column);
             if (row != null)
-                locations.Where(x => x.Row == row);
+                locations = locations.Where(x => x.Row == row);
 
             return PaginationHandler.Page(locations, ref pagination);
         }

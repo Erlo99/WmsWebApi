@@ -11,8 +11,8 @@ namespace Application.interfaces
 {
     public interface ILocationService
     {
-        LocationDto GetById(int id);
-        (IEnumerable<LocationDto>, PagedDto) GetWithFilters(ref PaginationDto pagination, int? storeId = null, string column = null, int? row = null);
+        CreateLocationDto GetById(int id);
+        (IEnumerable<CreateLocationDto>, PagedDto) GetWithFilters(ref PaginationDto pagination, int? storeId = null, string column = null, int? row = null);
         void Update(int locationId, LocationDto store);
         CreateLocationDto Create(LocationDto store);
         void Delete(int id);

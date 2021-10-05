@@ -16,5 +16,6 @@ namespace Application.interfaces
         void Delete(int userId, int StoreId);
 
         void InsertDefaultStoresToUser(int userId);
+        void ValidateAccess(int storeId);
     }
 }

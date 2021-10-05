@@ -3,6 +3,7 @@ using Application.DTO.Users;
 using Application.Entities;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.Users;
@@ -56,10 +57,11 @@ namespace Application.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public (IEnumerable<UserDto>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, string username = null, RolesEnum? role = null)
+        public (IEnumerable<UserDto>, PagedDto) GetAllWithFilters(PaginationDto paginationData, string username = null, RolesEnum? role = null)
         {
             Pagination pagination = _mapper.Map<Pagination>(paginationData);
-            var users = _usersRepository.GetAllWithFilters(ref pagination, username, role);
+            var users = _usersRepository.GetAllWithFilters(username, role);
+            users = PaginationHandler.Page<User>(users, paginationData);
             var paged = _mapper.Map<PagedDto>(pagination);
             return (_mapper.Map<IEnumerable<UserDto>>(users), paged);
         }

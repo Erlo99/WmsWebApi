@@ -21,6 +21,7 @@ namespace Infrastructure.Repositories
 
         public void AddOperation(LocationCargoOperation operation)
         {
+            operation.CreateAt = DateTime.Now;
             _context.LocationCargoOperation.Add(operation);
             _context.SaveChanges();
         }

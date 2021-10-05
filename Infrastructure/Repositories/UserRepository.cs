@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
             return _context.Users.FirstOrDefault(x => x.UserName == username);
         }
 
-        public IEnumerable<User> GetAllWithFilters(ref Pagination pagination, string username = null, RolesEnum? role = null)
+        public IEnumerable<User> GetAllWithFilters(string username = null, RolesEnum? role = null)
         {
             var users = _context.Users.AsEnumerable();
 
@@ -41,7 +41,7 @@ namespace Infrastructure.Repositories
             if (role != null)
                 users = users.Where(x => x.RoleId == role);
 
-            return PaginationHandler.Page<User>(users,ref pagination);
+            return users;
         }
 
 

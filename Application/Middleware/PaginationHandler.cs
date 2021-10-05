@@ -11,8 +11,10 @@ namespace Application.Middleware
     public static class PaginationHandler
     {
 
-        public static IEnumerable<TSource> Page<TSource>(this IEnumerable<TSource> source, ref Pagination pagination)
+        public static IEnumerable<TSource> Page<TSource>(this IEnumerable<TSource> source, PaginationDto paginationData)
         {
+
+            Pagination pagination = _mapper.Map<Pagination>(paginationData);
             pagination.TotalPages = (int)Math.Ceiling((source.Count() / (decimal)pagination.PageSize));
             if (pagination.OrderBy != null)
             {

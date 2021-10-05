@@ -1,14 +1,15 @@
 ﻿using Application.DTO;
+using Application.Helpers;
 using Application.interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Application.Services
 {
@@ -16,14 +17,14 @@ namespace Application.Services
     {
 
         private readonly IStoreRepository _storesRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserStoreRepository _userStoreRepository;
         private readonly IMapper _mapper;
 
-        public StoreService(IStoreRepository storesRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public StoreService(IStoreRepository storesRepository, IMapper mapper, IUserStoreRepository userStoreRepository)
         {
             _storesRepository = storesRepository;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
+            _userStoreRepository = userStoreRepository;
         }
 
         public (IEnumerable<StoreDTO>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, bool? isActive = null, bool? isDefault = null, string name = null)
@@ -32,6 +33,11 @@ namespace Application.Services
             Pagination pagination = _mapper.Map<Pagination>(paginationData);
             var stores = _storesRepository.GetWithFilters(ref pagination, isActive, isDefault);
 
+            if (!HttpContext.IsCurrentUserAdmin())
+                foreach (int storeId in stores.ToList().Select(x => x.Id).Distinct())
+                    if (_userStoreRepository.GetByKey(HttpContext.GetUserId(), storeId) == null)
+                        stores = stores.Where( x => x.Id != storeId);
+
             var paged = _mapper.Map<PagedDto>(pagination);
             return (_mapper.Map<IEnumerable<StoreDTO>>(stores), paged);
 
@@ -39,6 +45,7 @@ namespace Application.Services
 
         public StoreDTO GetById(int id)
         {
+            ValidateStoreAccess(id);
             var store = _storesRepository.GetById(id);
             return _mapper.Map<StoreDTO>(store);
         }
@@ -62,5 +69,11 @@ namespace Application.Services
             _storesRepository.GetById(id);
         }
 
+        public void ValidateStoreAccess(int id)
+        {
+            if (!HttpContext.IsCurrentUserAdmin())
+                if (_userStoreRepository.GetByKey(HttpContext.GetUserId(), id) == null)
+                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+        }
     }
 }

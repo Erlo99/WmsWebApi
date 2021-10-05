@@ -79,7 +79,7 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete, Route("{id}"), Authorize("AdminUsers")]
+        [HttpDelete, Route("{id}"), Authorize("ManagmentUsers")]
         [SwaggerOperation(Summary = "Deletes user data for administrative user Roles")]
         public IActionResult Deleteuser(int id)
         {

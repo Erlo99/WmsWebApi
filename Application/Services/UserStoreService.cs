@@ -27,9 +27,7 @@ namespace Application.Services
 
         public UserStoreDto Create(CreateUserStoreDto userStoreData)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), userStoreData.StoreId) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(userStoreData.StoreId);
             _usersService.GetById(userStoreData.UserId);
             var userStore = _mapper.Map<UserStore>(userStoreData);
             var createdUserStore = _userStoresRepository.Create(userStore);
@@ -38,9 +36,7 @@ namespace Application.Services
 
         public void Delete(int userId, int storeId)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), storeId) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(storeId);
             _usersService.GetById(userId);
             _userStoresRepository.Delete(userId, storeId);
         }
@@ -48,12 +44,24 @@ namespace Application.Services
         public IEnumerable<UserStoreDto> GetAllWithFilters(int? userId = null, int? storeId = null)
         {
             var userStores = _userStoresRepository.GetAllWithFilters(userId, storeId);
+            if (!HttpContext.IsCurrentUserAdmin())
+                foreach (int storeIdToVerify in userStores.ToList().Select(x => x.StoreId).Distinct())
+                    if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), storeIdToVerify) == null)
+                        userStores = userStores.Where(x => x.StoreId != storeIdToVerify);
+
             return _mapper.Map<IEnumerable<UserStoreDto>>(userStores);
         }
 
         public void InsertDefaultStoresToUser(int userId)
         {
             _userStoresRepository.InsertDefaultStores(userId);
+        }
+
+        public void ValidateAccess(int storeId)
+        {
+            if (!HttpContext.IsCurrentUserAdmin())
+                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), storeId) == null)
+                    throw new BadRequestException(ResponseMessage.BadRequestForId);
         }
     }
 }

@@ -14,5 +14,7 @@ namespace Application.interfaces
         public void Update(int id, StoreCreateDto store);
         public StoreDTO Create(StoreCreateDto store);
         public void Delete(int id);
+
+        public void ValidateStoreAccess(int id);
     }
 }

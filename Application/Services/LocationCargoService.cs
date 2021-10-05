@@ -83,11 +83,20 @@ namespace Application.Services
             {
                 int locationSizeId = _locationService.GetById(locationCargo.LocationId).Id;
                 int totalQty = existingLocationCargo.Qty + locationCargo.Qty;
-                int locationQty = _locationSizeService.GetById(locationSizeId).Qty;
                 if (totalQty < 0 || totalQty > _locationSizeService.GetById(locationSizeId).Qty)
                     throw new BadRequestException("Incorrect Quantity Or Full Location");
                 if (0 == totalQty)
+                {
                     _locationCargosRepository.Delete(existingLocationCargo.Id);
+                    _locationCargoOperationRepository.AddOperation(new LocationCargoOperation()
+                    {
+                        OperationId = OperationEnum.RemoveCargo,
+                        Qty = locationCargo.Qty,
+                        UserId = HttpContext.GetUserId(),
+                        Barcode = locationCargo.Barcode,
+                        LocationId = locationCargo.LocationId
+                    });
+                }
                 else
                 {
                     locationCargo.Qty = totalQty;
@@ -95,7 +104,7 @@ namespace Application.Services
                     _locationCargosRepository.Update(locationCargoToUpdate);
                     _locationCargoOperationRepository.AddOperation(new LocationCargoOperation()
                     {
-                        OperationId = totalQty == 0 ? OperationEnum.RemoveCargo : locationCargo.Qty > 0 ? OperationEnum.AddQuantity : OperationEnum.RemoveQuantity,
+                        OperationId = locationCargo.Qty > 0 ? OperationEnum.AddQuantity : OperationEnum.RemoveQuantity,
                         Qty = locationCargo.Qty,
                         UserId = HttpContext.GetUserId(),
                         Barcode = locationCargo.Barcode,

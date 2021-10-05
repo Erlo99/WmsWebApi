@@ -30,6 +30,9 @@ namespace Application.Services
 
         public CreateLocationDto Create(LocationDto location)
         {
+            if (location.Column.Any(char.IsDigit))
+                throw new BadRequestException("Column can't contain numbers");
+            location.Column = location.Column.ToUpper();
             if (!HttpContext.IsCurrentUserAdmin())
                 if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), location.StoreId) == null)
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
@@ -59,10 +62,11 @@ namespace Application.Services
 
         public (IEnumerable<CreateLocationDto>, PagedDto) GetWithFilters(ref PaginationDto paginationData, int? storeId = null, string column = null, int? row = null)
         {
-            
+            if (column != null && column.Any(char.IsDigit))
+                throw new BadRequestException("Column can't contain numbers");
             Pagination pagination = _mapper.Map<Pagination>(paginationData);
 
-            var locations = _locationRepository.GetAllWithFilters(ref pagination, storeId, column, row);
+            var locations = _locationRepository.GetAllWithFilters(ref pagination, storeId, column.ToUpper(), row);
             var paged = _mapper.Map<PagedDto>(pagination);
             return (_mapper.Map<IEnumerable<CreateLocationDto>>(locations), paged);
         }
@@ -72,9 +76,9 @@ namespace Application.Services
             if (!HttpContext.IsCurrentUserAdmin())
                 if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), location.StoreId) == null)
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
-            if (location.Column.Length > 2)
-                throw new BadRequestException("Column max lenght is 2");
-
+            if (location.Column.Length > 2 || location.Column.Any(char.IsDigit))
+                throw new BadRequestException("Column max length is 2 without numbers");
+            location.Column = location.Column.ToUpper();
             var existingLocation = _locationRepository.GetById(locationId);
             var locationToUpdate = _mapper.Map(location, existingLocation);
             _locationRepository.Update(locationToUpdate);

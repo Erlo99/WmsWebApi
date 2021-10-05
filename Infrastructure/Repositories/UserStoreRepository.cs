@@ -39,12 +39,6 @@ namespace Infrastructure.Repositories
         public IEnumerable<UserStoreView> GetAllWithFilters(int? userId = null, int? storeId = null)
         {
             var userStores = _context.userStoresViews.AsEnumerable();
-            List<int> stores;
-            if (!HttpContext.IsCurrentUserAdmin())
-            {
-                stores = userStores.Where(x => x.UserId == HttpContext.GetUserId()).Select(s => s.StoreId).ToList();
-                userStores = userStores.Where(x => stores.Contains(x.StoreId));
-            }
 
             if (userId != null)
                 userStores = userStores.Where(x => x.UserId == userId);

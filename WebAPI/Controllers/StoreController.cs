@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize("AdminUsers")]
+    [Authorize]
     public class StoreController : ControllerBase
     {
         private readonly IStoreService _storesService;
@@ -38,13 +38,13 @@ namespace WebAPI.Controllers
             var stores = _storesService.GetAllWithFilters(ref pagination, isActive, isDefault, name);
             return Ok(new PagedResponse<StoreDTO>(stores));
         }
-        [HttpPost]
+        [HttpPost, Authorize("AdminUsers")]
         public IActionResult PostStore(StoreCreateDto store)
         {
             var createdStore = _storesService.Create(store);
             return Created($"api/stores/{createdStore.Id}", createdStore);
         }
-        [HttpPut]
+        [HttpPut, Authorize("AdminUsers")]
         public IActionResult PutStore(int id, StoreCreateDto store)
         {
             _storesService.Update(id, store);

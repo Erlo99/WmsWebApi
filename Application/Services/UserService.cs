@@ -46,7 +46,7 @@ namespace Application.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public IEnumerable<UserDto> GetAllWithFilters(string username = null, RolesEnum? role = null)
+        public IEnumerable<UserDto> GetAllWithFilters(string username = null, RoleEnum? role = null)
         {
             var users = _usersRepository.GetAllWithFilters(username, role);
             if (username != null)
@@ -74,6 +74,9 @@ namespace Application.Services
         public void UpdateUser(int id, UpdateUserDto userData)
         {
             var existingUser = ValidateAccess(id);
+            if (HttpContext.GetUserRole() > (RoleEnum)userData.RoleId)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+
             var user = _mapper.Map(userData, existingUser);
             _usersRepository.UpdateUser(user);
         }

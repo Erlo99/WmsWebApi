@@ -8,6 +8,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Accountant,Admin,SuperAdmin,Manager")]
+    [Authorize(Roles = "Accountant, Admin, SuperAdmin, Manager")]
     public class LocationCargoOperationController : ControllerBase
     {
         private readonly ILocationCargoOperationSevice _locationCargoOperationService;
@@ -28,6 +29,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Return all operations on cargoes | Roles with access: Accountant, Admin, SuperAdmin, Manager")]
         public IActionResult GetAllOperations()
         {
             var dict = new Dictionary<int, string>();
@@ -39,6 +41,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet, Route("UserOperations")]
+        [SwaggerOperation(Summary = "Return all user operations of cargoes on locations | Roles with access: Accountant, Admin, SuperAdmin, Manager")]
         public IActionResult GetAllLocationCargoOperationsWithFilters([FromQuery] PaginationDto pagination, [FromQuery] LocationCargoOperationDto operation = null)
         {
             var result = _locationCargoOperationService.GetAllWithFilters(operation);

@@ -14,12 +14,10 @@ namespace Infrastructure.Repositories
     public class LocationRepository : ILocationRepository
     {
         private readonly WmsContext _context;
-        private readonly IUserStoreRepository _userStoreRepository;
 
-        public LocationRepository(WmsContext context, IUserStoreRepository userStoreRepository)
+        public LocationRepository(WmsContext context)
         {
             _context = context;
-            _userStoreRepository = userStoreRepository;
         }
 
         public Location Create(Location location)
@@ -29,11 +27,18 @@ namespace Infrastructure.Repositories
             return location;
         }
 
+        public List<int> GetAllLocationsForUserStores(List<int> locationIds, List<int> storeIds)
+        {
+            var userLocationIds = _context.Locations.Where(x => storeIds.Contains(x.StoreId)).Select(x => x.Id ).AsEnumerable();
+            var validLocationIds = userLocationIds.Intersect(locationIds).ToList();
+            return validLocationIds;
+        }
+
         public IEnumerable<Location> GetAllWithFilters(int? storeId = null, string column = null, int? row = null)
         {
 
             var locations = _context.Locations.AsEnumerable();
-            if (column != null)
+            if (storeId != null)
                 locations = locations.Where(x => x.StoreId == storeId);
             if (column != null)
                 locations = locations.Where(x => x.Column == column);
@@ -48,10 +53,9 @@ namespace Infrastructure.Repositories
             return _context.Locations.SingleOrDefault(x => x.Id == locationId);
         }
 
-        public void Remove(int locationId)
+        public void Remove(Location location)
         {
-            var locationToRemove = GetById(locationId);
-            _context.Locations.Remove(locationToRemove);
+            _context.Locations.Remove(location);
             _context.SaveChanges();
         }
 

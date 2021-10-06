@@ -10,7 +10,7 @@ namespace Application.DTO
 {
     public class RoleDto
     {
-        public RolesEnum RoleId { get; set; }
+        public RoleEnum RoleId { get; set; }
         public string Name { get; set; }
     }
 }

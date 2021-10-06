@@ -11,8 +11,8 @@ namespace Domain.Interfaces
     {
         Cargo GetByBarcode(int barcode);
         IEnumerable<Cargo> GetWithFilters( int? barcode = null, string Sku = null, string name = null);
-        void Update(Cargo store);
-        Cargo Create(Cargo store);
-        void Delete(int barcode);
+        void Update(Cargo cargo);
+        Cargo Create(Cargo cargo);
+        void Delete(Cargo barcode);
     }
 }

@@ -20,7 +20,7 @@ namespace Domain.Entities.Users
         }
 
 
-        public User(int id, string firstName, string lastName, string userName, string password, RolesEnum roleId, Role roles)
+        public User(int id, string firstName, string lastName, string userName, string password, RoleEnum roleId, Role roles)
         {
             Id = id;
             FirstName = firstName;
@@ -51,7 +51,7 @@ namespace Domain.Entities.Users
 
         [ForeignKey("Roles")]
         [Required]
-        public RolesEnum RoleId { get; set; }
+        public RoleEnum RoleId { get; set; }
         public virtual Role Roles { get; set; }
     }
 }

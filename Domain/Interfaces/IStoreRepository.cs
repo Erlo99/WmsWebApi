@@ -13,6 +13,6 @@ namespace Domain.Interfaces
         IEnumerable<Store> GetWithFilters( bool? isActive = null, bool? isDefault = null, string name = null);
         void Update(Store store);
         Store Create(Store store);
-        void Delete(int id);
+        void Delete(Store id);
     }
 }

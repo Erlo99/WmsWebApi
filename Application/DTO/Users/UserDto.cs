@@ -17,7 +17,7 @@ namespace Application.DTO.Users
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
-        public RolesEnum RoleId { get; set; }
+        public RoleEnum RoleId { get; set; }
 
         public void Mapping(Profile profile)
         {

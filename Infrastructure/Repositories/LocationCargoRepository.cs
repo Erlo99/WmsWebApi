@@ -26,10 +26,9 @@ namespace Infrastructure.Repositories
             return locationCargo;
         }
 
-        public void Delete(int id)
+        public void Delete(LocationCargo locationCargo)
         {
-            var locationCargoToRemove = _context.LocationCargos.SingleOrDefault(x => x.Id == id);
-            _context.LocationCargos.Remove(locationCargoToRemove);
+            _context.LocationCargos.Remove(locationCargo);
             _context.SaveChanges();
         }
 

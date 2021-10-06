@@ -29,7 +29,7 @@ namespace System.Web
                 return false;
             if (modifiedUser.Id == GetUserId())
                 return true;
-            return (RolesEnum)GetUserRole() < modifiedUser.RoleId;
+            return GetUserRole() < modifiedUser.RoleId;
 
         }
 
@@ -54,14 +54,13 @@ namespace System.Web
             return int.Parse(userId);
         }
 
-        public static int GetUserRole()
+        public static RoleEnum GetUserRole()
         {
             var claimsIdentity = System.Web.HttpContext.Current.User.Identity as ClaimsIdentity;
-            string roleId = claimsIdentity.Claims
+            string roleName = claimsIdentity.Claims
                 .Where(c => c.Type == ClaimTypes.Role)
                 .Select(c => c.Value).FirstOrDefault();
-
-            return int.Parse(roleId);
+            return Enum.Parse<RoleEnum>(roleName);
         }
 
 

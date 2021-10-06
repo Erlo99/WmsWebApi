@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,9 @@ namespace WebAPI.Controllers
         {
             _logger = logger;
         }
-        [Route("/error-dev")]
-        [HttpGet]
+
+        [HttpGet, Route("/error-dev")]
+        [SwaggerOperation(Summary = "Handling Exception Response on Development")]
         public IActionResult ErrorDev() 
         {
             var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
@@ -34,8 +36,8 @@ namespace WebAPI.Controllers
             return Problem(title: exception.Error.Message, detail: exception.Error.StackTrace);
         }
 
-        [Route("/error")]
-        [HttpGet]
+        [HttpGet, Route("/error")]
+        [SwaggerOperation(Summary = "Handling Exception Response")]
         public IActionResult Error()
         {
             var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();

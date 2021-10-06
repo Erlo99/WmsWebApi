@@ -49,7 +49,7 @@ namespace Application.Middleware
 
             var claims = new[] {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, Enum.GetName(typeof(RolesEnum), user.RoleId)),
+                new Claim(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), user.RoleId)),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
             var identity = new ClaimsIdentity(claims, Scheme.Name);

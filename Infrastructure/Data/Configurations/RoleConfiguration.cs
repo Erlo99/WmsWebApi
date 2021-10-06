@@ -13,8 +13,8 @@ namespace Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.HasData(Enum.GetValues(typeof(RolesEnum))
-                    .Cast<RolesEnum>()
+            builder.HasData(Enum.GetValues(typeof(RoleEnum))
+                    .Cast<RoleEnum>()
                     .Select(e => new Role()
                     {
                         Id = e,

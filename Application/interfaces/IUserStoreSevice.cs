@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.interfaces
 {
-    public interface IUserStoreSevice
+    public interface IUserStoreService
     {
         IEnumerable<UserStoreDto> GetAllWithFilters(int? userId = null, int? storeId = null);
 
@@ -16,6 +16,6 @@ namespace Application.interfaces
         void Delete(int userId, int StoreId);
 
         void InsertDefaultStoresToUser(int userId);
-        void ValidateAccess(int storeId);
+        void ValidateAccess(int storeId, int userId);
     }
 }

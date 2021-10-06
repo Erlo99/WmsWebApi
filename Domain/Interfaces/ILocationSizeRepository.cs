@@ -11,8 +11,8 @@ namespace Domain.Interfaces
     {
         LocationSize GetById(int id);
         IEnumerable<LocationSize> GetWithFilters(string Category = null, string SizeName = null, int? quantity = null );
-        void Update(LocationSize store);
-        LocationSize Create(LocationSize store);
-        void Delete(int id);
+        void Update(LocationSize locationSize);
+        LocationSize Create(LocationSize locationSize);
+        void Delete(LocationSize locationSize);
     }
 }

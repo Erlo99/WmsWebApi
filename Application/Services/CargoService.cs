@@ -1,4 +1,5 @@
 ﻿using Application.DTO;
+using Application.Helpers;
 using Application.interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -31,7 +32,10 @@ namespace Application.Services
 
         public void Delete(int barcode)
         {
-            _cargosRepository.Delete(barcode);
+            var cargo = _cargosRepository.GetByBarcode(barcode);
+            if (cargo == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            _cargosRepository.Delete(cargo);
         }
 
         public IEnumerable<CargoDto> GetAllWithFilters(int? barcode = null, string sku = null, string name = null)
@@ -43,6 +47,8 @@ namespace Application.Services
         public void Update(CargoDto cargoData)
         {
             var cargoToUpdate = _cargosRepository.GetByBarcode(cargoData.Barcode);
+            if (cargoToUpdate == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
             var cargo = _mapper.Map(cargoData, cargoToUpdate);
             _cargosRepository.Update(cargo);
         }

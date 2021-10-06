@@ -26,9 +26,8 @@ namespace Infrastructure.Repositories
             return cargo;
         }
 
-        public void Delete(int barcode)
+        public void Delete(Cargo cargo)
         {
-            var cargo = _context.Cargos.SingleOrDefault(x => x.Barcode == barcode);
             _context.Cargos.Remove(cargo);
             _context.SaveChanges();
         }

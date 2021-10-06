@@ -13,7 +13,7 @@ namespace Domain.Interfaces
         IEnumerable<Location> GetAllWithFilters(int? storeId = null, string column =null, int? row = null);
         Location Create(Location  location);
         void Update(Location location);
-
-        void Remove(int locationId);
+        List<int> GetAllLocationsForUserStores(List<int> locationIds, List<int> storeIds);
+        void Remove(Location location);
     }
 }

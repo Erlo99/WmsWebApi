@@ -26,9 +26,9 @@ namespace Infrastructure.Repositories
             return store;
         }
 
-        public void Delete(int id)
+        public void Delete(Store store)
         {
-            _context.Stores.Remove(GetById(id));
+            _context.Stores.Remove(store);
             _context.SaveChanges();
         }
 

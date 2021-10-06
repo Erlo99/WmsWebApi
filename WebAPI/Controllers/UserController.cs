@@ -30,22 +30,22 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet, Authorize("ManagmentUsers")]
-        [SwaggerOperation(Summary = "Returns All users for management user Roles")]
-        public IActionResult GetWithFilters([FromQuery] PaginationDto pagination = null, string username = null, RolesEnum? role = null)
+        [SwaggerOperation(Summary = "Return all users | Roles with access: Admin, SuperAdmin, Manager")]
+        public IActionResult GetWithFilters([FromQuery] PaginationDto pagination = null, string username = null, RoleEnum? role = null)
         {
             var users = _usersService.GetAllWithFilters(username, role);
             return Ok(PaginationHandler.Page(users,pagination));
         }
 
         [HttpGet, Route("{id}"), Authorize("ManagmentUsers")]
-        [SwaggerOperation(Summary = "Returns user data for management user Roles")]
+        [SwaggerOperation(Summary = "Return  user | Roles with access: Admin, SuperAdmin, Manager")]
         public IActionResult GetById(int id)
         {
             var user = _usersService.GetById(id);
             return Ok(new Response<UserDto>(user));
         }
         [HttpGet, Route("CurrentUser")]
-        [SwaggerOperation(Summary = "Returns current user data")]
+        [SwaggerOperation(Summary = "Return logged user | for authorized users")]
         public IActionResult GetCurrentUser()
         {
             var user = _usersService.GetCurrentUser();
@@ -54,37 +54,36 @@ namespace WebAPI.Controllers
 
         [HttpPost, Route("Authentication")]
         [AllowAnonymous]
-        [SwaggerOperation(Summary = "Returns user when credentials are correct")]
+        [SwaggerOperation(Summary = "Verify user credentials")]
         public IActionResult Authenticate(UserAuthenticate userAuthenticate)
         {
             var user = _authService.Authenticate(userAuthenticate.UserName, userAuthenticate.Password);
-
             if (user == null)
                 return BadRequest("Incorrect username or password");
             return NoContent();
         }
 
         [HttpPost, Authorize("ManagmentUsers")]
-        [SwaggerOperation(Summary = "Adds new user for management user Roles")]
-        public IActionResult PostUser(CreateUserDto userData)
+        [SwaggerOperation(Summary = "Add  user | Roles with access: Admin, SuperAdmin, Manager")]
+        public IActionResult CreateUser(CreateUserDto userData)
         {
             var user = _usersService.CreateUser(userData);
             return Created($"api/users/{user.Id}", user);
         }
 
         [HttpPut, Route("{id}"), Authorize("ManagmentUsers")]
-        [SwaggerOperation(Summary = "update user data for management user Roles")]
-        public IActionResult PutUser(int id, UpdateUserDto userData)
+        [SwaggerOperation(Summary = "Update  user | Roles with access: Admin, SuperAdmin, Manager")]
+        public IActionResult UpdateUser(int id, UpdateUserDto userData)
         {
             _usersService.UpdateUser(id, userData);
             return NoContent();
         }
 
         [HttpDelete, Route("{id}"), Authorize("ManagmentUsers")]
-        [SwaggerOperation(Summary = "Deletes user data for administrative user Roles")]
+        [SwaggerOperation(Summary = "Delete  user | Roles with access: Admin, SuperAdmin, Manager")]
         public IActionResult Deleteuser(int id)
         {
-                _usersService.DeleteUser(id);
+            _usersService.DeleteUser(id);
             return NoContent();
         }
     }

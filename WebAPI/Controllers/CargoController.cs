@@ -5,6 +5,7 @@ using Application.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Accountant,Admin,SuperAdmin,Manager")]
+        [Authorize(Roles = "Accountant, Admin, SuperAdmin, Manager")]
+        [SwaggerOperation(Summary = "Return All Cargoes | Roles with access: Accountant, Admin, SuperAdmin, Manager")]
         public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null, int? barcode = null, string sku = null, string name = null)
         {
             var result = _cargosService.GetAllWithFilters(barcode, sku, name);
@@ -33,18 +35,21 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete, Authorize("AdminUsers")]
+        [SwaggerOperation(Summary = "Delete Cargo | Roles with access: Admin, SuperAdmin")]
         public IActionResult Delete(int barcode)
         {
             _cargosService.Delete(barcode);
             return NoContent();
         }
         [HttpPost, Authorize("ManagmentUsers")]
+        [SwaggerOperation(Summary = "Add Cargo | Roles with access: Admin, SuperAdmin, Manager")]
         public IActionResult Create(CargoDto cargos)
         {
             _cargosService.Create(cargos);
             return Created($"/api/Cargos?barcode={cargos.Barcode}", cargos);
         }
         [HttpPut, Authorize("ManagmentUsers")]
+        [SwaggerOperation(Summary = "Update Cargo | Roles with access: Admin, SuperAdmin, Manager")]
         public IActionResult Update(CargoDto cargos)
         {
             _cargosService.Update(cargos);

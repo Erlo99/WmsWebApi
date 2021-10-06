@@ -47,12 +47,16 @@ namespace Application.Services
         {
             ValidateStoreAccess(id);
             var store = _storesRepository.GetById(id);
+            if (store == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
             return _mapper.Map<StoreDTO>(store);
         }
 
         public void Update(int id, StoreCreateDto storeData)
         {
             var store = _storesRepository.GetById(id);
+            if (store == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
             var storeUpdated = _mapper.Map(storeData, store);
             _storesRepository.Update(storeUpdated);
         }
@@ -66,7 +70,10 @@ namespace Application.Services
 
         public void Delete(int id)
         {
-            _storesRepository.GetById(id);
+            var store = _storesRepository.GetById(id);
+            if(store == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            _storesRepository.Delete(store);
         }
 
         public void ValidateStoreAccess(int id)

@@ -11,8 +11,8 @@ namespace Domain.Interfaces
     public interface IUserStoreRepository
     {
         IEnumerable<UserStoreView> GetAllWithFilters(int? userId = null, int? storeId = null);
-        UserStoreView Create(UserStore store);
-        void Delete(int userId, int storeId);
+        UserStoreView Create(UserStore userStore);
+        void Delete(UserStore userStore);
 
         void InsertDefaultStores(int userId);
         UserStore GetByKey(int userId, int storeId);

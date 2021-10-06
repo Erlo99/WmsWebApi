@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class UserStoreService : IUserStoreSevice
+    public class UserStoreService : IUserStoreService
     {
         private readonly IUserStoreRepository _userStoresRepository;
         private readonly IUserService _usersService;
@@ -27,7 +27,7 @@ namespace Application.Services
 
         public UserStoreDto Create(CreateUserStoreDto userStoreData)
         {
-            ValidateAccess(userStoreData.StoreId);
+            ValidateAccess(userStoreData.StoreId, userStoreData.UserId);
             _usersService.GetById(userStoreData.UserId);
             var userStore = _mapper.Map<UserStore>(userStoreData);
             var createdUserStore = _userStoresRepository.Create(userStore);
@@ -36,9 +36,9 @@ namespace Application.Services
 
         public void Delete(int userId, int storeId)
         {
-            ValidateAccess(storeId);
-            _usersService.GetById(userId);
-            _userStoresRepository.Delete(userId, storeId);
+            ValidateAccess(storeId, userId);
+            var user = _userStoresRepository.GetAllWithFilters(userId, storeId).SingleOrDefault();
+            _userStoresRepository.Delete(_mapper.Map<UserStore>(user));
         }
 
         public IEnumerable<UserStoreDto> GetAllWithFilters(int? userId = null, int? storeId = null)
@@ -57,11 +57,14 @@ namespace Application.Services
             _userStoresRepository.InsertDefaultStores(userId);
         }
 
-        public void ValidateAccess(int storeId)
+        public void ValidateAccess(int storeId, int userId)
         {
             if (!HttpContext.IsCurrentUserAdmin())
+            {
+                _usersService.ValidateAccess(userId);
                 if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), storeId) == null)
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
+            }
         }
     }
 }

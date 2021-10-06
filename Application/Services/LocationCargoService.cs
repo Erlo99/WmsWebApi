@@ -16,19 +16,25 @@ namespace Application.Services
     public class LocationCargoService : ILocationCargoService
     {
 
+
         private readonly ILocationCargoRepository _locationCargosRepository;
         private readonly IMapper _mapper;
         private readonly ILocationService _locationService;
+        private readonly ILocationRepository _locationRepository;
+        private readonly IUserStoreRepository _userStoreRepository;
         private readonly ILocationCargoOperationRepository _locationCargoOperationRepository;
         private readonly ILocationSizeService _locationSizeService;
-        public LocationCargoService(ILocationCargoRepository locationCargosRepository, IMapper mapper, ILocationService locationService, ILocationCargoOperationRepository locationCargoOperationRepository, ILocationSizeService locationSizeService)
+        public LocationCargoService(ILocationCargoRepository locationCargosRepository, IMapper mapper, ILocationService locationService, ILocationCargoOperationRepository locationCargoOperationRepository, ILocationSizeService locationSizeService, ILocationRepository locationRepository, IUserStoreRepository userStoreRepository)
         {
             _locationCargosRepository = locationCargosRepository;
             _mapper = mapper;
             _locationService = locationService;
             _locationCargoOperationRepository = locationCargoOperationRepository;
             _locationSizeService = locationSizeService;
+            _locationRepository = locationRepository;
+            _userStoreRepository = userStoreRepository;
         }
+
 
         public CreateLocationCargoDto Create(LocationCargoDto locationCargo)
         {
@@ -47,24 +53,19 @@ namespace Application.Services
 
         public IEnumerable<LocationCargoDto> GetAllWithFilters(int? locationId = null, int? barcode = null)
         {
-            var locationCargos = _locationCargosRepository.GetAllWithFilters(locationId, barcode).ToList();
-            
-            foreach (var location in locationCargos.Select(x => x.LocationId).Distinct())
-                try
-                {
-                    _locationService.ValidateAccess(location);
-                }
-                catch
-                {
-                    locationCargos.RemoveAll(x => x.LocationId == location);
-                }
-
+            var locationCargos = _locationCargosRepository.GetAllWithFilters(locationId, barcode);
+            var locationIds = locationCargos.Select(x => x.LocationId).Distinct().ToList();
+            var userStores = _userStoreRepository.GetAllWithFilters(HttpContext.GetUserId()).Select(x => x.StoreId).ToList();
+            //ogarnij tak aby usuwalo lokacje ze sklepami do ktorych nie ma dostepu
+            //wyciagnij sklepy uzytkownika i where ma tylko te sklepy
+            locationIds = _locationRepository.GetAllLocationsForUserStores(locationIds, userStores);
+            locationCargos = locationCargos.Where(x => locationIds.Contains(x.LocationId));
             return _mapper.Map<IEnumerable<LocationCargoDto>>(locationCargos); 
         }
 
         public void Update(LocationCargoDto locationCargo)
         {
-            _locationService.ValidateAccess(locationCargo.LocationId);
+             _locationService.ValidateAccess(locationCargo.LocationId);
             var existingLocationCargo = _locationCargosRepository.GetAllWithFilters(locationCargo.LocationId, locationCargo.Barcode).SingleOrDefault();
 
             if (existingLocationCargo == null)
@@ -80,7 +81,7 @@ namespace Application.Services
                     throw new BadRequestException("Incorrect Quantity Or Full Location");
                 if (0 == totalQty)
                 {
-                    _locationCargosRepository.Delete(existingLocationCargo.Id);
+                    _locationCargosRepository.Delete(existingLocationCargo);
                     _locationCargoOperationRepository.AddOperation(new LocationCargoOperation()
                     {
                         OperationId = OperationEnum.RemoveCargo,

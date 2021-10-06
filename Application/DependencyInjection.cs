@@ -21,7 +21,7 @@ namespace Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IStoreService, StoreService>();
-            services.AddScoped<IUserStoreSevice, UserStoreService>();
+            services.AddScoped<IUserStoreService, UserStoreService>();
 
 
             services.AddScoped<ICargoService, CargoService>();

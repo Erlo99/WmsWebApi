@@ -25,9 +25,9 @@ namespace Infrastructure.Repositories
             return locationSize;
         }
 
-        public void Delete(int id)
+        public void Delete(LocationSize locationSize)
         {
-            _context.LocationSizes.Remove(GetById(id));
+            _context.LocationSizes.Remove(locationSize);
             _context.SaveChanges();
         }
 

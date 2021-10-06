@@ -1,5 +1,6 @@
 ﻿using Application.Mappings;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Entities.Views;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Application.DTO.Users
 
         public new void Mapping(Profile profile)
         {
+            profile.CreateMap<UserStoreView, UserStore>();
             profile.CreateMap<UserStoreView, UserStoreDto>();
                 //.ForMember(x =>
                //x.StoreName, opt => opt.MapFrom( src => src.StoreId)

@@ -1,4 +1,5 @@
 ﻿using Application.DTO;
+using Application.Helpers;
 using Application.interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -31,12 +32,16 @@ namespace Application.Services
 
         public void Delete(int id)
         {
-            _locationSizesRepository.Delete(id);
+            var locationSize = _locationSizesRepository.GetById(id);
+            if (locationSize == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            _locationSizesRepository.Delete(locationSize);
         }
-
         public LocationSizeDto GetById(int id)
         {
             var locationSize = _locationSizesRepository.GetById(id);
+            if (locationSize == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
             return _mapper.Map<LocationSizeDto>(locationSize);
         }
 
@@ -49,6 +54,8 @@ namespace Application.Services
         public void Update(int id, CreateLocationSizeDto locationSize)
         {
             var locationSizeToUpdate = _locationSizesRepository.GetById(id);
+            if (locationSizeToUpdate == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
             var locationSizeMapped = _mapper.Map(locationSize, locationSizeToUpdate);
             _locationSizesRepository.Update(locationSizeMapped);
         }

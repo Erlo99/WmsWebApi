@@ -29,9 +29,8 @@ namespace Infrastructure.Repositories
             return _context.userStoresViews.SingleOrDefault(x => x.StoreId == store.StoreId && x.UserId == store.UserId);
         }
 
-        public void Delete(int userId, int storeId)
+        public void Delete(UserStore userStore)
         {
-            var userStore = _context.UserStores.SingleOrDefault( x => x.StoreId == storeId && x.UserId == userId);
             _context.UserStores.Remove(userStore);
             _context.SaveChanges();
         }

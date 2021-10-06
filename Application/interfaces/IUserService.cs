@@ -14,7 +14,7 @@ namespace Application.interfaces
 {
     public interface IUserService
     {
-        public IEnumerable<UserDto> GetAllWithFilters(string username = null, RolesEnum? role = null);
+        public IEnumerable<UserDto> GetAllWithFilters(string username = null, RoleEnum? role = null);
         public UserDto GetById(int id);
         public UserDto GetCurrentUser();
         public void UpdateUser(int id, UpdateUserDto user);

@@ -10,8 +10,9 @@ namespace Domain.Interfaces
     public interface ILocationCargoRepository
     {
         IEnumerable<LocationCargo> GetAllWithFilters(int? LocationId = null, int? barcode = null);
+
         LocationCargo Create(LocationCargo locationCargo);
         void Update(LocationCargo locationCargo);
-        void Delete(int id);
+        void Delete(LocationCargo locationCargo);
     }
 }

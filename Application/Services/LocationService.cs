@@ -41,21 +41,27 @@ namespace Application.Services
 
         public void Delete(int id)
         {
-            ValidateAccess(id);
-            _locationRepository.Remove(id);
+            var location = _locationRepository.GetById(id);
+            if (location == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(location.StoreId);
+            _locationRepository.Remove(location);
         }
 
         public CreateLocationDto GetById(int id)
         {
-            ValidateAccess(id);
-            return _mapper.Map<CreateLocationDto>(_locationRepository.GetById(id));
+            var location = _locationRepository.GetById(id);
+            if (location == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(location.StoreId);
+            return _mapper.Map<CreateLocationDto>(location);
         }
 
         public IEnumerable<CreateLocationDto> GetWithFilters(int? storeId = null, string column = null, int? row = null)
         {
             if(storeId != null)
                 ValidateAccess(storeId.Value);
-            var locations = _locationRepository.GetAllWithFilters(storeId, column.ToUpper(), row);
+            var locations = _locationRepository.GetAllWithFilters(storeId, column == null ? column : column.ToUpper(), row);
             return _mapper.Map<IEnumerable<CreateLocationDto>>(locations);
         }
 
@@ -64,6 +70,9 @@ namespace Application.Services
             ValidateDto(ref location);
             ValidateAccess(location.StoreId);
             var existingLocation = _locationRepository.GetById(locationId);
+            if (existingLocation == null)
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(existingLocation.StoreId);
             var locationToUpdate = _mapper.Map(location, existingLocation);
             _locationRepository.Update(locationToUpdate);
         }
@@ -81,6 +90,8 @@ namespace Application.Services
                 throw new BadRequestException("Column can't contain numbers");
             if (location.Column.Length > 2)
                 throw new BadRequestException("Column max lenght is 2");
+            if (location.Column == null)
+                throw new BadRequestException("Column can't be null");
             location.Column = location.Column.ToUpper();
         }
     }

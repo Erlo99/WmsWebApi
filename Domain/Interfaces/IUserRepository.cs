@@ -10,10 +10,10 @@ namespace Domain.Interfaces
 {
     public interface IUserRepository
     {
-        IEnumerable<User> GetAllWithFilters(string username = null, RolesEnum? role = null);
+        IEnumerable<User> GetAllWithFilters(string username = null, RoleEnum? role = null);
         User GetById(int id);
         User CreateUser(User user);
-        void DeleteUser(User id);
-        void UpdateUser(User users);
+        void DeleteUser(User user);
+        void UpdateUser(User user);
     }
 }

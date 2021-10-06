@@ -28,7 +28,7 @@ namespace Infrastructure.Repositories
             return _context.Users.FirstOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<User> GetAllWithFilters(string username = null, RolesEnum? role = null)
+        public IEnumerable<User> GetAllWithFilters(string username = null, RoleEnum? role = null)
         {
             var users = _context.Users.AsEnumerable();
             if (username != null)

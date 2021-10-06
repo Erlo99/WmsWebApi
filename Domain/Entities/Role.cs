@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Domain.Entities
 {
 
-    public enum RolesEnum
+    public enum RoleEnum
     {
         SuperAdmin = 0,
         Admin = 1,
@@ -25,7 +25,7 @@ namespace Domain.Entities
         {
 
         }
-        public Role(RolesEnum roleId, string name)
+        public Role(RoleEnum roleId, string name)
         {
             Id = roleId;
             Name = name;
@@ -33,7 +33,7 @@ namespace Domain.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public RolesEnum Id { get; set; }
+        public RoleEnum Id { get; set; }
 
         [Required]
         [MaxLength(50)]

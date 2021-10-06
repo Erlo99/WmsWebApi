@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
            return  _context.Cargos.SingleOrDefault(x => x.Barcode == barcode);
         }
 
-        public IEnumerable<Cargo> GetWithFilters(ref Pagination pagination, int? barcode = null, string sku = null, string name = null)
+        public IEnumerable<Cargo> GetWithFilters( int? barcode = null, string sku = null, string name = null)
         {
             var cargos = _context.Cargos.AsEnumerable();
 
@@ -49,7 +49,7 @@ namespace Infrastructure.Repositories
             if (name != null)
                 cargos = cargos.Where(x => x.Name == name);
 
-            return PaginationHandler.Page(cargos, ref pagination);
+            return cargos;
             }
 
         public void Update(Cargo store)

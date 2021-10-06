@@ -16,6 +16,11 @@ namespace Application.DTO
         {
 
         }
+        public PagedDto(int pageNumber, int pageSize)
+        {
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+        }
         public PagedDto(int pageNumber, int pageSize, int totalPages)
         {
             PageNumber = pageNumber;

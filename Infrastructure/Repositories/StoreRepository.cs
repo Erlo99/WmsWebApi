@@ -37,7 +37,7 @@ namespace Infrastructure.Repositories
             return _context.Stores.SingleOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<Store> GetWithFilters(ref Pagination pagination, bool? isActive = null, bool? isDefault = null, string name = null)
+        public IEnumerable<Store> GetWithFilters( bool? isActive = null, bool? isDefault = null, string name = null)
         {
             var stores = _context.Stores.AsEnumerable();
             
@@ -48,7 +48,7 @@ namespace Infrastructure.Repositories
             if (name != null)
                 stores = stores.Where(x => x.Name == name);
 
-            return PaginationHandler.Page(stores, ref pagination);
+            return stores;
             }
 
         public void Update(Store store)

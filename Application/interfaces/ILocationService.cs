@@ -12,10 +12,14 @@ namespace Application.interfaces
     public interface ILocationService
     {
         CreateLocationDto GetById(int id);
-        (IEnumerable<CreateLocationDto>, PagedDto) GetWithFilters(ref PaginationDto pagination, int? storeId = null, string column = null, int? row = null);
+        IEnumerable<CreateLocationDto> GetWithFilters(int? storeId = null, string column = null, int? row = null);
         void Update(int locationId, LocationDto store);
         CreateLocationDto Create(LocationDto store);
         void Delete(int id);
+
+        void ValidateAccess(int id);
+
+        void ValidateDto(ref LocationDto location);
 
     }
 }

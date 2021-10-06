@@ -14,19 +14,13 @@ namespace Application.interfaces
 {
     public interface IUserService
     {
-        public (IEnumerable<UserDto>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, string username = null, RolesEnum? role = null);
-
+        public IEnumerable<UserDto> GetAllWithFilters(string username = null, RolesEnum? role = null);
         public UserDto GetById(int id);
         public UserDto GetCurrentUser();
-
-        public bool CanCurrentUserManipulateData(User existingUser, User modifiedUser = null);
-
-
         public void UpdateUser(int id, UpdateUserDto user);
-
         public UserDto CreateUser(CreateUserDto user);
-
         public void DeleteUser(int id);
+        public User ValidateAccess(int id);
 
     }
 }

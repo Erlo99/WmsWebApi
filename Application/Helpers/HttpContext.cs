@@ -23,23 +23,13 @@ namespace System.Web
             _contextAccessor = contextAccessor;
         }
 
-        public static bool CanCurrentUserUpdate(ClaimsIdentity userIdentity, User existingUser, User modifiedUser = null)
+        public static bool CanCurrentUserUpdate(User modifiedUser)
         {
-            string claimRole = userIdentity.Claims.SingleOrDefault(x => x.Type.EndsWith("/identity/claims/role")).Value;
-
-            if (String.IsNullOrEmpty(claimRole))
-                throw new Exception("Role not found");
-
-            RolesEnum enumRole = (RolesEnum)Enum.Parse(typeof(RolesEnum), claimRole, true);
-            if (existingUser.UserName == userIdentity.Name && modifiedUser == null)
+            if (modifiedUser == null)
+                return false;
+            if (modifiedUser.Id == GetUserId())
                 return true;
-            else
-            {
-                bool result = enumRole < existingUser.RoleId;
-                if (result && modifiedUser != null)
-                    result = enumRole < modifiedUser.RoleId;
-                return result;
-            }
+            return (RolesEnum)GetUserRole() < modifiedUser.RoleId;
 
         }
 
@@ -62,6 +52,16 @@ namespace System.Web
                 .Select(c => c.Value).FirstOrDefault();
 
             return int.Parse(userId);
+        }
+
+        public static int GetUserRole()
+        {
+            var claimsIdentity = System.Web.HttpContext.Current.User.Identity as ClaimsIdentity;
+            string roleId = claimsIdentity.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value).FirstOrDefault();
+
+            return int.Parse(roleId);
         }
 
 

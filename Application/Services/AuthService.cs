@@ -28,7 +28,7 @@ namespace Application.Services
         public UserDto Authenticate(string username, string password)
         {
             
-            var user = _usersRepository.GetByUsername(username);
+            var user = _usersRepository.GetAllWithFilters(username).SingleOrDefault();
             if(BC.Verify(password, user.Password))
                 return _mapper.Map<UserDto>(user);
             throw new BadRequestException("Incorrect username or password");

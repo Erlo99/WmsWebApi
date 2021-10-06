@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface ICargoRepository
     {
         Cargo GetByBarcode(int barcode);
-        IEnumerable<Cargo> GetWithFilters(ref Pagination pagination, int? barcode = null, string Sku = null, string name = null);
+        IEnumerable<Cargo> GetWithFilters( int? barcode = null, string Sku = null, string name = null);
         void Update(Cargo store);
         Cargo Create(Cargo store);
         void Delete(int barcode);

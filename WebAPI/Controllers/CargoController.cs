@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +28,8 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Accountant,Admin,SuperAdmin,Manager")]
         public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null, int? barcode = null, string sku = null, string name = null)
         {
-            var result = _cargosService.GetAllWithFilters(ref pagination, barcode, sku, name);
-            return Ok(new PagedResponse<CargoDto>(result));
+            var result = _cargosService.GetAllWithFilters(barcode, sku, name);
+            return Ok(PaginationHandler.Page(result, pagination));
         }
 
         [HttpDelete, Authorize("AdminUsers")]

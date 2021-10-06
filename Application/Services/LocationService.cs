@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application.DTO.Locations;
+using Application.Middleware;
 
 namespace Application.Services
 {
@@ -30,15 +31,9 @@ namespace Application.Services
 
         public CreateLocationDto Create(LocationDto location)
         {
-            if (location.Column.Any(char.IsDigit))
-                throw new BadRequestException("Column can't contain numbers");
-            location.Column = location.Column.ToUpper();
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), location.StoreId) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateDto(ref location);
+            ValidateAccess(location.StoreId);
 
-            if (location.Column.Length > 2)
-                throw new BadRequestException("Column max lenght is 2");
             var newLocation = _mapper.Map<Location>(location);
             var createdLocation = _locationRepository.Create(newLocation);
             return _mapper.Map<CreateLocationDto>(createdLocation);
@@ -46,42 +41,47 @@ namespace Application.Services
 
         public void Delete(int id)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), id) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(id);
             _locationRepository.Remove(id);
         }
 
         public CreateLocationDto GetById(int id)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), id) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+            ValidateAccess(id);
             return _mapper.Map<CreateLocationDto>(_locationRepository.GetById(id));
         }
 
-        public (IEnumerable<CreateLocationDto>, PagedDto) GetWithFilters(ref PaginationDto paginationData, int? storeId = null, string column = null, int? row = null)
+        public IEnumerable<CreateLocationDto> GetWithFilters(int? storeId = null, string column = null, int? row = null)
         {
-            if (column != null && column.Any(char.IsDigit))
-                throw new BadRequestException("Column can't contain numbers");
-            Pagination pagination = _mapper.Map<Pagination>(paginationData);
-
-            var locations = _locationRepository.GetAllWithFilters(ref pagination, storeId, column.ToUpper(), row);
-            var paged = _mapper.Map<PagedDto>(pagination);
-            return (_mapper.Map<IEnumerable<CreateLocationDto>>(locations), paged);
+            if(storeId != null)
+                ValidateAccess(storeId.Value);
+            var locations = _locationRepository.GetAllWithFilters(storeId, column.ToUpper(), row);
+            return _mapper.Map<IEnumerable<CreateLocationDto>>(locations);
         }
 
         public void Update(int locationId, LocationDto location)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), location.StoreId) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
-            if (location.Column.Length > 2 || location.Column.Any(char.IsDigit))
-                throw new BadRequestException("Column max length is 2 without numbers");
-            location.Column = location.Column.ToUpper();
+            ValidateDto(ref location);
+            ValidateAccess(location.StoreId);
             var existingLocation = _locationRepository.GetById(locationId);
             var locationToUpdate = _mapper.Map(location, existingLocation);
             _locationRepository.Update(locationToUpdate);
+        }
+
+        public void ValidateAccess(int id)
+        {
+            if (!HttpContext.IsCurrentUserAdmin())
+                if (_userStoresRepository.GetByKey(HttpContext.GetUserId(), id) == null)
+                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+        }
+
+        public void ValidateDto(ref LocationDto location)
+        {
+            if (location.Column.Any(char.IsDigit))
+                throw new BadRequestException("Column can't contain numbers");
+            if (location.Column.Length > 2)
+                throw new BadRequestException("Column max lenght is 2");
+            location.Column = location.Column.ToUpper();
         }
     }
 }

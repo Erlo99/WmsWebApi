@@ -32,11 +32,6 @@ namespace Application.Services
 
         public CreateLocationCargoDto Create(LocationCargoDto locationCargo)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_locationService.GetById(locationCargo.LocationId) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
-
-            _locationService.GetById(locationCargo.LocationId);
             var locationCargoToCreate = _mapper.Map<LocationCargo>(locationCargo);
             var locationCargoAdded = _locationCargosRepository.Create(locationCargoToCreate);
             _locationCargoOperationRepository.AddOperation(new LocationCargoOperation() { 
@@ -46,7 +41,7 @@ namespace Application.Services
                 Barcode = locationCargo.Barcode,
                 LocationId = locationCargo.LocationId
             });
-            return (_mapper.Map<CreateLocationCargoDto>(locationCargoAdded));
+            return _mapper.Map<CreateLocationCargoDto>(locationCargoAdded);
 
         }
 
@@ -57,7 +52,7 @@ namespace Application.Services
             foreach (var location in locationCargos.Select(x => x.LocationId).Distinct())
                 try
                 {
-                    _locationService.GetById(location);
+                    _locationService.ValidateAccess(location);
                 }
                 catch
                 {
@@ -69,9 +64,7 @@ namespace Application.Services
 
         public void Update(LocationCargoDto locationCargo)
         {
-            if (!HttpContext.IsCurrentUserAdmin())
-                if (_locationService.GetById(locationCargo.LocationId) == null)
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
+            _locationService.ValidateAccess(locationCargo.LocationId);
             var existingLocationCargo = _locationCargosRepository.GetAllWithFilters(locationCargo.LocationId, locationCargo.Barcode).SingleOrDefault();
 
             if (existingLocationCargo == null)
@@ -81,7 +74,7 @@ namespace Application.Services
             }
             else
             {
-                int locationSizeId = _locationService.GetById(locationCargo.LocationId).Id;
+                int locationSizeId = _locationService.GetById(locationCargo.LocationId).SizeId;
                 int totalQty = existingLocationCargo.Qty + locationCargo.Qty;
                 if (totalQty < 0 || totalQty > _locationSizeService.GetById(locationSizeId).Qty)
                     throw new BadRequestException("Incorrect Quantity Or Full Location");

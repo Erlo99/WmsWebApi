@@ -27,15 +27,10 @@ namespace Infrastructure.Repositories
         {
             return _context.Users.FirstOrDefault(x => x.Id == id);
         }
-        public User GetByUsername(string username)
-        {
-            return _context.Users.FirstOrDefault(x => x.UserName == username);
-        }
 
         public IEnumerable<User> GetAllWithFilters(string username = null, RolesEnum? role = null)
         {
             var users = _context.Users.AsEnumerable();
-
             if (username != null)
                 users = users.Where(x => x.UserName == username);
             if (role != null)

@@ -49,8 +49,8 @@ namespace Application.Services
         public void Update(int id, CreateLocationSizeDto locationSize)
         {
             var locationSizeToUpdate = _locationSizesRepository.GetById(id);
-            var locationSizeUpdated = _mapper.Map(locationSize, locationSizeToUpdate);
-            _locationSizesRepository.Update(locationSizeToUpdate);
+            var locationSizeMapped = _mapper.Map(locationSize, locationSizeToUpdate);
+            _locationSizesRepository.Update(locationSizeMapped);
         }
     }
 }

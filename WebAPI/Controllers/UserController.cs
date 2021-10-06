@@ -3,6 +3,7 @@ using Application.DTO.Users;
 using Application.Entities;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -30,10 +31,10 @@ namespace WebAPI.Controllers
 
         [HttpGet, Authorize("ManagmentUsers")]
         [SwaggerOperation(Summary = "Returns All users for management user Roles")]
-        public IActionResult GetWithFilters(string username = null, RolesEnum? role = null, [FromQuery] PaginationDto pagination = null)
+        public IActionResult GetWithFilters([FromQuery] PaginationDto pagination = null, string username = null, RolesEnum? role = null)
         {
-            var users = _usersService.GetAllWithFilters(ref pagination, username, role);
-            return Ok(new PagedResponse<UserDto>(users));
+            var users = _usersService.GetAllWithFilters(username, role);
+            return Ok(PaginationHandler.Page(users,pagination));
         }
 
         [HttpGet, Route("{id}"), Authorize("ManagmentUsers")]
@@ -41,14 +42,14 @@ namespace WebAPI.Controllers
         public IActionResult GetById(int id)
         {
             var user = _usersService.GetById(id);
-            return Ok(user);
+            return Ok(new Response<UserDto>(user));
         }
         [HttpGet, Route("CurrentUser")]
         [SwaggerOperation(Summary = "Returns current user data")]
         public IActionResult GetCurrentUser()
         {
             var user = _usersService.GetCurrentUser();
-            return Ok(user);
+            return Ok(new Response<UserDto>(user));
         }
 
         [HttpPost, Route("Authentication")]

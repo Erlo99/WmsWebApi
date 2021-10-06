@@ -11,7 +11,7 @@ namespace Application.interfaces
     public interface ILocationCargoOperationSevice
     {
 
-        (IEnumerable<LocationCargoOperationDto>, PagedDto) GetAllWithFilters(ref PaginationDto pagination, LocationCargoOperationDto operation = null);
+        IEnumerable<LocationCargoOperationDto> GetAllWithFilters(LocationCargoOperationDto operation = null);
 
     }
 }

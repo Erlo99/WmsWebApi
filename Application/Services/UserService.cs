@@ -35,41 +35,29 @@ namespace Application.Services
             _userStoresRepository = userStoresRepository;
         }
 
-       
-
-        public bool CanCurrentUserManipulateData(User existingUser, User modifiedUser = null)
-        {
-            ClaimsIdentity identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            return HttpContext.CanCurrentUserUpdate(identity, existingUser, modifiedUser);
-        }
-
-
         public UserDto GetById(int id)
         {
-            var user = _usersRepository.GetById(id);
-            if (user == null || !CanCurrentUserManipulateData(user))
-               throw new BadRequestException(ResponseMessage.BadRequestForId);
+            var user = ValidateAccess(id);
             return _mapper.Map<UserDto>(user);
         }
         public UserDto GetCurrentUser()
         {
-            var user = _usersRepository.GetByUsername(HttpContext.Current.User.Identity.Name);
+            var user = _usersRepository.GetById(HttpContext.GetUserId());
             return _mapper.Map<UserDto>(user);
         }
 
-        public (IEnumerable<UserDto>, PagedDto) GetAllWithFilters(PaginationDto paginationData, string username = null, RolesEnum? role = null)
+        public IEnumerable<UserDto> GetAllWithFilters(string username = null, RolesEnum? role = null)
         {
-            Pagination pagination = _mapper.Map<Pagination>(paginationData);
             var users = _usersRepository.GetAllWithFilters(username, role);
-            users = PaginationHandler.Page<User>(users, paginationData);
-            var paged = _mapper.Map<PagedDto>(pagination);
-            return (_mapper.Map<IEnumerable<UserDto>>(users), paged);
+            if (username != null)
+                ValidateAccess(users.SingleOrDefault().Id);
+            return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
         public UserDto CreateUser(CreateUserDto userData)
         {
             var user = _mapper.Map<User>(userData);
-            if (user == null || !CanCurrentUserManipulateData(user))
+            if (!HttpContext.CanCurrentUserUpdate(user))
                 throw new BadRequestException(ResponseMessage.BadRequestForId);
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user = _usersRepository.CreateUser(user);
@@ -79,21 +67,24 @@ namespace Application.Services
 
         public void DeleteUser(int id)
         {
-                var user = _usersRepository.GetById(id);
-                if (user == null || !CanCurrentUserManipulateData(user))
-                    throw new BadRequestException(ResponseMessage.BadRequestForId);
-                _usersRepository.DeleteUser(user);
+            var user = ValidateAccess(id);
+            _usersRepository.DeleteUser(user);
         }
 
         public void UpdateUser(int id, UpdateUserDto userData)
         {
-            var existingUser = _usersRepository.GetById(id);
-            if (existingUser == null || !CanCurrentUserManipulateData(existingUser, _mapper.Map<User>(userData)))
-                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            var existingUser = ValidateAccess(id);
             var user = _mapper.Map(userData, existingUser);
             _usersRepository.UpdateUser(user);
         }
 
+        public User ValidateAccess(int id)
+        {
+            var user = _usersRepository.GetById(id);
+            if (!HttpContext.CanCurrentUserUpdate(user))
+                throw new BadRequestException(ResponseMessage.BadRequestForId);
+            return user;
+        }
     }
 }
 

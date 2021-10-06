@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface ILocationRepository
     {
         Location GetById(int locationId);
-        IEnumerable<Location> GetAllWithFilters(ref Pagination pagination,int? storeId = null, string column =null, int? row = null);
+        IEnumerable<Location> GetAllWithFilters(int? storeId = null, string column =null, int? row = null);
         Location Create(Location  location);
         void Update(Location location);
 

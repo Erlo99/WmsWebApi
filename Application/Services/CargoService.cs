@@ -34,13 +34,10 @@ namespace Application.Services
             _cargosRepository.Delete(barcode);
         }
 
-        public (IEnumerable<CargoDto>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, int? barcode = null, string sku = null, string name = null)
+        public IEnumerable<CargoDto> GetAllWithFilters(int? barcode = null, string sku = null, string name = null)
         {
-            var pagination = _mapper.Map<Pagination>(paginationData);
-            var cargos = _cargosRepository.GetWithFilters(ref pagination, barcode, sku, name);
-
-            var paged = _mapper.Map<PagedDto>(pagination);
-            return (_mapper.Map<IEnumerable<CargoDto>>(cargos), paged);
+            var cargos = _cargosRepository.GetWithFilters(barcode, sku, name);
+            return _mapper.Map<IEnumerable<CargoDto>>(cargos);
         }
 
         public void Update(CargoDto cargoData)

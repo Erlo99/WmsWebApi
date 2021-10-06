@@ -8,7 +8,7 @@ namespace Application.Helpers
 {
     public class Response <T>
     {
-        public Response()
+        public Response(Response<DTO.Users.UserDto> user)
         {
 
         }

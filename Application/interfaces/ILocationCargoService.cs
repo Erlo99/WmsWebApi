@@ -12,6 +12,5 @@ namespace Application.interfaces
             IEnumerable<LocationCargoDto> GetAllWithFilters(int? locationId = null, int? barcode = null);
             CreateLocationCargoDto Create(LocationCargoDto locationCargo);
             void Update(LocationCargoDto locationCargo);
-        
     }
 }

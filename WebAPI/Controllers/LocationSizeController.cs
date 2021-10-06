@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,10 +42,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet, Authorize("AdminUsers")]
-        public IActionResult GetAllWithFilters(string category = null, string sizeName = null, int? quantity = null)
+        public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination = null,string category = null, string sizeName = null, int? quantity = null)
         {
             var locationSizes = _locationSizesService.GetWithFilters(category, sizeName, quantity);
-            return Ok(new Response<IEnumerable<LocationSizeDto>>(locationSizes));
+            return Ok(PaginationHandler.Page(locationSizes, pagination));
         }
 
         [HttpDelete, Authorize("AdminUsers")]

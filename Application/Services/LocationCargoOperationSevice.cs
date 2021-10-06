@@ -22,14 +22,11 @@ namespace Application.Services
             _locationCargoOperationRepository = locationCargoOperationRepository;
         }
 
-        public (IEnumerable<LocationCargoOperationDto>,PagedDto) GetAllWithFilters(ref PaginationDto pagination, LocationCargoOperationDto operation = null)
+        public IEnumerable<LocationCargoOperationDto> GetAllWithFilters(LocationCargoOperationDto operation = null)
         {
-            Pagination paginationData = _mapper.Map<Pagination>(pagination);
-
             var operationData = _mapper.Map<LocationCargoOperation>(operation);
-            var result = _locationCargoOperationRepository.GetAllWithFilters(ref paginationData, operationData);
-            var paged = _mapper.Map<PagedDto>(paginationData);
-            return (_mapper.Map<IEnumerable<LocationCargoOperationDto>>(result),paged);
+            var result = _locationCargoOperationRepository.GetAllWithFilters(operationData);
+            return _mapper.Map<IEnumerable<LocationCargoOperationDto>>(result);
         }
     }
 }

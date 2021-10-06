@@ -9,7 +9,7 @@ namespace Domain.Interfaces
 {
     public interface ILocationCargoOperationRepository
     {
-        IEnumerable<LocationCargoOperation> GetAllWithFilters(ref Pagination pagination, LocationCargoOperation? operation = null);
+        IEnumerable<LocationCargoOperation> GetAllWithFilters(LocationCargoOperation? operation = null);
         void AddOperation(LocationCargoOperation operation); 
     }
 }

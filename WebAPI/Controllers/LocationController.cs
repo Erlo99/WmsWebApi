@@ -2,6 +2,7 @@
 using Application.DTO.Locations;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,8 +25,7 @@ namespace WebAPI.Controllers
             _locationService = locationService;
         }
         // POST: LocationSizesController/Create
-        [HttpPost]
-        [Authorize("ManagmentUsers")]
+        [HttpPost, Authorize("ManagmentUsers")]
         public IActionResult Create(LocationDto location)
         {
             var locationCreated = _locationService.Create(location);
@@ -39,23 +39,28 @@ namespace WebAPI.Controllers
             return Ok(new Response<CreateLocationDto>(location));
         }
 
-        [HttpGet]
-        public IActionResult GetAllWithFilters([FromQuery] PaginationDto pagination, int storeId, string column = null, int? row = null)
+        [HttpGet, Authorize("AdminUsers")]
+        public IActionResult GetAllWithFiltersAdmin([FromQuery] PaginationDto pagination = null, int? storeId = null, string column = null, int? row = null)
         {
-            var location = _locationService.GetWithFilters(ref pagination, storeId, column,row);
-            return Ok(new PagedResponse<CreateLocationDto>(location));
+            var location = _locationService.GetWithFilters(storeId, column,row);
+            return Ok(PaginationHandler.Page(location, pagination));
         }
 
-        [HttpDelete]
-        [Authorize("ManagmentUsers")]
+        [HttpGet, Route("{storeId}")]
+        public IActionResult GetAllWithFilters(int storeId, [FromQuery] PaginationDto pagination = null, string column = null, int? row = null)
+        {
+            var location = _locationService.GetWithFilters(storeId, column, row);
+            return Ok(PaginationHandler.Page(location, pagination));
+        }
+
+        [HttpDelete, Authorize("ManagmentUsers")]
         public IActionResult delete(int locationId)
         {
             _locationService.Delete(locationId);
             return NoContent();
         }
 
-        [HttpPut, Route("{locationId}")]
-        [Authorize("ManagmentUsers")]
+        [HttpPut, Route("{locationId}"), Authorize("ManagmentUsers")]
         public IActionResult Update(int locationId, LocationDto location)
         {
             _locationService.Update(locationId,location);

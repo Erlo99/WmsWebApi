@@ -29,17 +29,10 @@ namespace Infrastructure.Repositories
             return location;
         }
 
-        public IEnumerable<Location> GetAllWithFilters(ref Pagination pagination, int? storeId = null, string column = null, int? row = null)
+        public IEnumerable<Location> GetAllWithFilters(int? storeId = null, string column = null, int? row = null)
         {
 
             var locations = _context.Locations.AsEnumerable();
-            List<int> stores;
-            if (!HttpContext.IsCurrentUserAdmin())
-            {
-                stores = _userStoreRepository.GetAllWithFilters(HttpContext.GetUserId()).Select(s => s.StoreId).ToList();
-                locations = locations.Where(x => stores.Contains(x.StoreId));
-            }
-
             if (column != null)
                 locations = locations.Where(x => x.StoreId == storeId);
             if (column != null)
@@ -47,7 +40,7 @@ namespace Infrastructure.Repositories
             if (row != null)
                 locations = locations.Where(x => x.Row == row);
 
-            return PaginationHandler.Page(locations, ref pagination);
+            return locations;
         }
 
         public Location GetById(int locationId)

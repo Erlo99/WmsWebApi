@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -27,20 +28,19 @@ namespace Application.Services
             _userStoreRepository = userStoreRepository;
         }
 
-        public (IEnumerable<StoreDTO>, PagedDto) GetAllWithFilters(ref PaginationDto paginationData, bool? isActive = null, bool? isDefault = null, string name = null)
+        public IEnumerable<StoreDTO> GetAllWithFilters(bool? isActive = null, bool? isDefault = null, string name = null)
         {
-
-            Pagination pagination = _mapper.Map<Pagination>(paginationData);
-            var stores = _storesRepository.GetWithFilters(ref pagination, isActive, isDefault);
-
+            IEnumerable<Store> stores;
             if (!HttpContext.IsCurrentUserAdmin())
+            {
+                stores = _storesRepository.GetWithFilters(true, isDefault, name);
                 foreach (int storeId in stores.ToList().Select(x => x.Id).Distinct())
                     if (_userStoreRepository.GetByKey(HttpContext.GetUserId(), storeId) == null)
-                        stores = stores.Where( x => x.Id != storeId);
-
-            var paged = _mapper.Map<PagedDto>(pagination);
-            return (_mapper.Map<IEnumerable<StoreDTO>>(stores), paged);
-
+                        stores = stores.Where(x => x.Id != storeId);
+            }
+            else
+                stores = _storesRepository.GetWithFilters(isActive, isDefault, name);
+            return _mapper.Map<IEnumerable<StoreDTO>>(stores);
         }
 
         public StoreDTO GetById(int id)

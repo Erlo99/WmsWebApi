@@ -1,6 +1,7 @@
 ﻿using Application.DTO;
 using Application.Helpers;
 using Application.interfaces;
+using Application.Middleware;
 using Application.Services;
 using AutoMapper;
 using Domain.Entities;
@@ -34,15 +35,14 @@ namespace WebAPI.Controllers
             {
                 dict.Add((int)Enum.Parse(typeof(OperationEnum), name), name);
             }
-            return (Ok(new Response<Dictionary<int, string>>(dict)));
+            return Ok(new Response<Dictionary<int, string>>(dict));
         }
 
         [HttpGet, Route("UserOperations")]
         public IActionResult GetAllLocationCargoOperationsWithFilters([FromQuery] PaginationDto pagination, [FromQuery] LocationCargoOperationDto operation = null)
         {
-            var result = _locationCargoOperationService.GetAllWithFilters(ref pagination, operation);
-            return Ok( new PagedResponse<LocationCargoOperationDto>(result));
-            
+            var result = _locationCargoOperationService.GetAllWithFilters(operation);
+            return Ok(PaginationHandler.Page(result, pagination));
         }
 
 

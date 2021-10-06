@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<LocationCargoOperation> GetAllWithFilters(ref Pagination pagination, LocationCargoOperation operation = null)
+        public IEnumerable<LocationCargoOperation> GetAllWithFilters(LocationCargoOperation operation = null)
         {
             var locationCargoOperation = _context.LocationCargoOperation.AsEnumerable();
             if(operation.Barcode != null)
@@ -42,7 +42,7 @@ namespace Infrastructure.Repositories
             if (operation.UserId != null)
                 locationCargoOperation = locationCargoOperation.Where(x => x.UserId == operation.UserId);
 
-            return PaginationHandler.Page(locationCargoOperation, ref pagination);
+            return locationCargoOperation;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Application.DTO;
+using Application.Helpers;
+using AutoMapper;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,15 +13,13 @@ namespace Application.Middleware
     public static class PaginationHandler
     {
 
-        public static IEnumerable<TSource> Page<TSource>(this IEnumerable<TSource> source, PaginationDto paginationData)
+        public static PagedResponse<TSource> Page<TSource>(this IEnumerable<TSource> source, PaginationDto pagination)
         {
-
-            Pagination pagination = _mapper.Map<Pagination>(paginationData);
-            pagination.TotalPages = (int)Math.Ceiling((source.Count() / (decimal)pagination.PageSize));
+            PagedDto pagedDto = new PagedDto(pagination.PageNumber, pagination.PageSize);
+            pagedDto.TotalPages = (int)Math.Ceiling((source.Count() / (decimal)pagination.PageSize));
             if (pagination.OrderBy != null)
             {
                 var propertyInfo = typeof(TSource).GetProperty(pagination.OrderBy);
-
                 if (pagination.OrderDescending == true)
                     source = source.OrderByDescending(x => propertyInfo.GetValue(x, null));
                 else
@@ -27,7 +27,7 @@ namespace Application.Middleware
             }
             source = source.Skip((pagination.PageNumber - 1) * pagination.PageSize).Take(pagination.PageSize);
 
-            return source;
+            return new PagedResponse<TSource>((source, pagedDto));
             
         }
     }

@@ -11,14 +11,14 @@ Features:<br/>
 -user operations on locations for verification<br/>
 -every endpoint has action summary <br/>
 
-Roles:
--SuperAdmin,
--Admin,
--Manager,
--Worker,
--Accountant
+Roles:<br/>
+-SuperAdmin,<br/>
+-Admin,<br/>
+-Manager,<br/>
+-Worker,<br/>
+-Accountant<br/>
 
-For access to demo:
-Worker:
-login: worker1
-password: worker1
+If you have access to demo:<br/>
+Worker:<br/>
+login: worker1<br/>
+password: worker1<br/>

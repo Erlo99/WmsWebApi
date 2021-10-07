@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         // POST: LocationSizesController/Create
         [HttpPost, Authorize("ManagmentUsers")]
         [SwaggerOperation(Summary = "Add location | Roles with access: Admin, SuperAdmin, Manager")]
-        public IActionResult Create(LocationDto location)
+        public IActionResult Create(CreateLocationDto location)
         {
             var locationCreated = _locationService.Create(location);
             return Created($"api/locationSizes/{locationCreated.Id}", locationCreated);
@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
         public IActionResult GetById(int id)
         {
             var location = _locationService.GetById(id);
-            return Ok(new Response<CreateLocationDto>(location));
+            return Ok(new Response<LocationDto>(location));
         }
 
         [HttpGet, Authorize("AdminUsers")]
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
 
         [HttpPut, Route("{locationId}"), Authorize("ManagmentUsers")]
         [SwaggerOperation(Summary = "Update location | Roles with access: Admin, SuperAdmin, Manager")]
-        public IActionResult Update(int locationId, LocationDto location)
+        public IActionResult Update(int locationId, CreateLocationDto location)
         {
             _locationService.Update(locationId,location);
             return NoContent();

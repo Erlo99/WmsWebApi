@@ -29,14 +29,14 @@ namespace Application.Services
             _userStoresRepository = userStoresRepository;
         }
 
-        public CreateLocationDto Create(LocationDto location)
+        public LocationDto Create(CreateLocationDto location)
         {
             ValidateDto(ref location);
             ValidateAccess(location.StoreId);
 
             var newLocation = _mapper.Map<Location>(location);
             var createdLocation = _locationRepository.Create(newLocation);
-            return _mapper.Map<CreateLocationDto>(createdLocation);
+            return _mapper.Map<LocationDto>(createdLocation);
         }
 
         public void Delete(int id)
@@ -48,24 +48,24 @@ namespace Application.Services
             _locationRepository.Remove(location);
         }
 
-        public CreateLocationDto GetById(int id)
+        public LocationDto GetById(int id)
         {
             var location = _locationRepository.GetById(id);
             if (location == null)
                 throw new BadRequestException(ResponseMessage.BadRequestForId);
             ValidateAccess(location.StoreId);
-            return _mapper.Map<CreateLocationDto>(location);
+            return _mapper.Map<LocationDto>(location);
         }
 
-        public IEnumerable<CreateLocationDto> GetWithFilters(int? storeId = null, string column = null, int? row = null)
+        public IEnumerable<LocationDto> GetWithFilters(int? storeId = null, string column = null, int? row = null)
         {
             if(storeId != null)
                 ValidateAccess(storeId.Value);
             var locations = _locationRepository.GetAllWithFilters(storeId, column == null ? column : column.ToUpper(), row);
-            return _mapper.Map<IEnumerable<CreateLocationDto>>(locations);
+            return _mapper.Map<IEnumerable<LocationDto>>(locations);
         }
 
-        public void Update(int locationId, LocationDto location)
+        public void Update(int locationId, CreateLocationDto location)
         {
             ValidateDto(ref location);
             ValidateAccess(location.StoreId);
@@ -84,7 +84,7 @@ namespace Application.Services
                     throw new BadRequestException(ResponseMessage.BadRequestForId);
         }
 
-        public void ValidateDto(ref LocationDto location)
+        public void ValidateDto(ref CreateLocationDto location)
         {
             if (location.Column.Any(char.IsDigit))
                 throw new BadRequestException("Column can't contain numbers");

@@ -48,7 +48,7 @@ namespace Application.Services
 
         public IEnumerable<UserDto> GetAllWithFilters(string username = null, RoleEnum? role = null)
         {
-            var users = _usersRepository.GetAllWithFilters(username, role);
+            var users = _usersRepository.GetAllWithFilters(username != null ? username.ToLower() : username, role);
             if (username != null)
                 ValidateAccess(users.SingleOrDefault().Id);
             return _mapper.Map<IEnumerable<UserDto>>(users);
@@ -60,6 +60,7 @@ namespace Application.Services
             if (!HttpContext.CanCurrentUserUpdate(user))
                 throw new BadRequestException(ResponseMessage.BadRequestForId);
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.UserName = user.UserName.ToLower();
             user = _usersRepository.CreateUser(user);
             _userStoresRepository.InsertDefaultStores(user.Id);
             return _mapper.Map<UserDto>(user);
@@ -76,8 +77,8 @@ namespace Application.Services
             var existingUser = ValidateAccess(id);
             if (HttpContext.GetUserRole() > (RoleEnum)userData.RoleId)
                 throw new BadRequestException(ResponseMessage.BadRequestForId);
-
             var user = _mapper.Map(userData, existingUser);
+            user.UserName = user.UserName.ToLower();
             _usersRepository.UpdateUser(user);
         }
 

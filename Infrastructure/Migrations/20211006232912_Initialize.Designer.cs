@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(WmsContext))]
-    [Migration("20211004223614_LocationCargoOperation")]
-    partial class LocationCargoOperation
+    [Migration("20211006232912_Initialize")]
+    partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,9 @@ namespace Infrastructure.Migrations
                     b.HasIndex("SizeId");
 
                     b.HasIndex("StoreId");
+
+                    b.HasIndex("Column", "Row", "StoreId")
+                        .IsUnique();
 
                     b.ToTable("Locations");
                 });
@@ -212,6 +215,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SizeName")
+                        .IsUnique();
 
                     b.ToTable("LocationSize");
                 });

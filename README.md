@@ -11,6 +11,8 @@ Features:<br/>
 -user operations on locations for verification<br/>
 -every endpoint has action summary <br/>
 
+For endpoints in pagination to order by use camelCase with first upper letter example: "/api/user" order by = "RoleId"
+
 Roles:<br/>
 -SuperAdmin,<br/>
 -Admin,<br/>
@@ -19,6 +21,11 @@ Roles:<br/>
 -Accountant<br/>
 
 If you have access to demo:<br/>
+Manager:<br/>
+login: manager1<br/>
+password: manager1<br/>
+
 Worker:<br/>
 login: worker1<br/>
 password: worker1<br/>
+
